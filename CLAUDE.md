@@ -4,20 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-BlogForge is in **Phase 1 (Backend)** — no application code exists yet beyond the root `package.json`. The root package holds Express, Mongoose, dotenv, and nodemon. The planned directory layout is `server/`, `client/`, and `ai-service/`, each installed and run independently.
+BlogForge has completed **Phase 1 (Backend)**: `Backend/` contains the full Express 5 + Mongoose 9 API (auth, RBAC, posts, taxonomy, comments, media, analytics — see `Backend/README.md` for endpoints and setup). `Frontend/` holds a Vite + React + TypeScript scaffold. The AI microservice (`ai-service/`) does not exist yet.
 
 ## Commands
 
-The root `package.json` has no meaningful scripts yet. Once the service directories are scaffolded, commands will be:
-
 ```bash
-# Node/Express API
-cd server && npm install && npm run dev    # nodemon-backed dev server
+# Node/Express API (JavaScript, CommonJS)
+cd Backend && npm install && npm run dev   # nodemon dev server
+npm run seed:admin                          # create/promote the first admin (ADMIN_* vars in .env)
+npm start                                   # production
 
-# React frontends
-cd client && npm install && npm run dev
+# React frontend (Vite + TS)
+cd Frontend && npm install && npm run dev
 
-# Python AI microservice
+# Python AI microservice (Phase 3 — not yet created)
 cd ai-service && pip install -r requirements.txt && uvicorn main:app --reload
 ```
 
