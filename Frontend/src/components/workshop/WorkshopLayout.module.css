@@ -1,0 +1,353 @@
+/*
+ * The Workshop app shell — §4. Denser and warmer in rhythm than the Reader,
+ * but built from the same tokens. Sidebar on --anvil, top bar on --surface
+ * with a hairline underneath.
+ */
+
+.shell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  background: var(--paper);
+  min-height: 100dvh;
+}
+
+.shellCollapsed {
+  grid-template-columns: var(--sidebar-rail-w) minmax(0, 1fr);
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────── */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--anvil);
+  border-right: 1px solid var(--anvil-line);
+  overflow: hidden;
+}
+
+.sidebarHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  height: var(--topbar-h);
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--anvil-line);
+  flex-shrink: 0;
+}
+
+.nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navGroupLabel {
+  padding: var(--space-4) var(--space-3) var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-anvil-muted);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-control);
+  color: var(--on-anvil-muted);
+  font-size: var(--text-small);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.navItem:hover {
+  background: var(--anvil-raised);
+  color: var(--on-anvil);
+}
+
+/* Active gets an ember spine — the accent earns its place by marking "you are
+   here" exactly once in the whole shell. */
+.navItemActive {
+  background: var(--anvil-raised);
+  color: var(--on-anvil);
+  box-shadow: inset 2px 0 0 var(--ember);
+}
+
+.navItem:focus-visible {
+  outline-color: var(--ember);
+}
+
+.navBadge {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  padding: 1px 6px;
+  border-radius: var(--radius-chip);
+  background: var(--pending);
+  color: var(--anvil);
+  font-weight: 600;
+}
+
+.sidebarFoot {
+  padding: var(--space-3);
+  border-top: 1px solid var(--anvil-line);
+  flex-shrink: 0;
+}
+
+.collapseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-control);
+  color: var(--on-anvil-muted);
+  flex-shrink: 0;
+}
+
+.collapseButton:hover {
+  background: var(--anvil-raised);
+  color: var(--on-anvil);
+}
+
+/* Icon-rail mode: labels out, icons centred. */
+.shellCollapsed .navItem {
+  justify-content: center;
+  padding: 0;
+}
+
+.shellCollapsed .navLabel,
+.shellCollapsed .navGroupLabel,
+.shellCollapsed .navBadge {
+  display: none;
+}
+
+/* ── Main column ─────────────────────────────────────────────────────── */
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--filing);
+}
+
+.topbarSearch {
+  flex: 1;
+  max-width: 420px;
+}
+
+.topbarSpacer {
+  flex: 1;
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.drawerButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  color: var(--slate);
+}
+
+.drawerButton:hover {
+  background: var(--mist);
+}
+
+/* ── User menu ───────────────────────────────────────────────────────── */
+.userMenu {
+  position: relative;
+}
+
+.userButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-control);
+  color: var(--iron);
+}
+
+.userButton:hover {
+  background: var(--mist);
+}
+
+.userName {
+  font-size: var(--text-small);
+  font-weight: 500;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--space-2));
+  min-width: 220px;
+  padding: var(--space-2);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-overlay);
+  z-index: 40;
+}
+
+.menuHeader {
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border-bottom: 1px solid var(--filing);
+  margin-bottom: var(--space-2);
+}
+
+.menuEmail {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-control);
+  font-size: var(--text-small);
+  color: var(--slate);
+  text-decoration: none;
+  text-align: left;
+}
+
+.menuItem:hover {
+  background: var(--mist);
+  color: var(--iron);
+}
+
+.menuItemDanger:hover {
+  background: var(--danger-tint);
+  color: var(--danger-strong);
+}
+
+/* ── Content ─────────────────────────────────────────────────────────── */
+.content {
+  flex: 1;
+  width: 100%;
+  max-width: var(--workshop-max);
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+/* ── Mobile: sidebar becomes a drawer ────────────────────────────────── */
+.scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: var(--scrim);
+}
+
+@media (max-width: 900px) {
+  .shell,
+  .shellCollapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-w);
+    transform: translateX(-100%);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .scrimOpen {
+    display: block;
+  }
+
+  .drawerButton {
+    display: inline-flex;
+  }
+
+  .collapseButton {
+    display: none;
+  }
+
+  /* The drawer always shows labels, even if the desktop rail is collapsed. */
+  .shellCollapsed .navItem {
+    justify-content: flex-start;
+    padding: 0 var(--space-3);
+  }
+
+  .shellCollapsed .navLabel,
+  .shellCollapsed .navGroupLabel,
+  .shellCollapsed .navBadge {
+    display: initial;
+  }
+
+  .shellCollapsed .navBadge {
+    margin-left: auto;
+  }
+
+  .topbar {
+    padding: 0 var(--space-4);
+  }
+
+  .content {
+    padding: var(--space-4);
+  }
+
+  .topbarSearch {
+    max-width: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .userName {
+    display: none;
+  }
+}

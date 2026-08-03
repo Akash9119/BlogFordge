@@ -1,0 +1,190 @@
+/* §2: the reading column sits on --surface, not on the app's cool paper.
+   The page goes full-bleed white so long-form reading has its own ground. */
+.page {
+  background: var(--surface);
+  border-bottom: 1px solid var(--filing);
+  width: 100%;
+}
+
+.inner {
+  max-width: var(--reader-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--steel);
+  text-decoration: none;
+  margin-bottom: var(--space-6);
+}
+
+.back:hover {
+  color: var(--iron);
+}
+
+/* The reading column: everything long-form sits inside 72ch. */
+.column {
+  max-width: var(--reading-measure);
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--space-6);
+}
+
+.kickerRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-display-l);
+  line-height: var(--text-display-l-lh);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--anvil);
+}
+
+.excerpt {
+  margin-top: var(--space-4);
+  font-family: var(--font-reading);
+  font-size: var(--text-reading);
+  line-height: var(--text-reading-lh);
+  color: var(--slate);
+}
+
+/* Byline strip: author on the left, mono instrumentation on the right. */
+.byline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-top: var(--space-5);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--filing);
+  border-bottom: 1px solid var(--filing);
+}
+
+.authorBlock {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.authorName {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--anvil);
+  text-decoration: none;
+}
+
+.authorName:hover {
+  color: var(--quench-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.authorRole {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.cover {
+  width: 100%;
+  max-width: var(--reader-max);
+  margin: 0 auto var(--space-7);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--filing);
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  background: var(--mist);
+}
+
+/* Owner/staff viewing an unpublished post. */
+.draftNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  max-width: var(--reading-measure);
+  margin: 0 auto var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--ember-tint);
+  color: var(--ember-strong);
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+}
+
+.draftNoticeIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.taxonomy {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--filing);
+}
+
+.taxonomyLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin-right: var(--space-1);
+}
+
+@media (max-width: 640px) {
+  .inner {
+    padding: var(--space-5) var(--space-4) var(--space-7);
+  }
+  .title {
+    font-size: var(--text-h1);
+    line-height: var(--text-h1-lh);
+  }
+  .cover {
+    aspect-ratio: 16 / 9;
+  }
+  .byline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}

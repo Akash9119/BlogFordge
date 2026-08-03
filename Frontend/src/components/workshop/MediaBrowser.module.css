@@ -1,0 +1,192 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-5);
+  border: 1px dashed var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  text-align: center;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.dropzoneActive {
+  border-color: var(--ember);
+  border-style: solid;
+  background: var(--ember-tint);
+}
+
+.dropzoneGlyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  background: var(--mist);
+  color: var(--steel);
+}
+
+.dropzoneActive .dropzoneGlyph {
+  background: var(--surface);
+  color: var(--ember-strong);
+}
+
+.dropzoneTitle {
+  font-size: var(--text-body);
+  font-weight: 500;
+  color: var(--anvil);
+}
+
+.dropzoneHint {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Grid ────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  overflow: hidden;
+  text-align: left;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.item:hover {
+  border-color: var(--steel-soft);
+}
+
+.itemSelected {
+  border-color: var(--quench);
+  box-shadow: inset 0 0 0 1px var(--quench);
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--mist);
+  border-bottom: 1px solid var(--filing);
+}
+
+.itemMeta {
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: var(--text-small);
+  color: var(--iron);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemStats {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.itemActions {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  display: flex;
+  gap: var(--space-1);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.item:hover .itemActions,
+.item:focus-within .itemActions {
+  opacity: 1;
+}
+
+/* Picker mode: the tile is a <button>, so the delete control sits beside it
+   rather than inside it (no nested buttons). Reveal on the wrapper instead. */
+.tileWrap {
+  position: relative;
+}
+
+.tileWrap:hover .itemActions,
+.tileWrap:focus-within .itemActions {
+  opacity: 1;
+}
+
+.tileWrap .item {
+  width: 100%;
+}
+
+.itemAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-chip);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  color: var(--slate);
+}
+
+.itemAction:hover {
+  background: var(--danger-tint);
+  color: var(--danger-strong);
+  border-color: transparent;
+}
+
+.checkMark {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-chip);
+  background: var(--quench);
+  color: #fff;
+}
+
+.uploading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  font-size: var(--text-small);
+  color: var(--slate);
+}

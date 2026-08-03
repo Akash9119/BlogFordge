@@ -1,0 +1,132 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.label {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  font-weight: 500;
+  color: var(--iron);
+}
+
+.optional {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+/* Mono helper / counter text — a measured fact about the input. */
+.counter {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--steel);
+}
+
+.counterOver {
+  color: var(--danger-strong);
+}
+
+.hint {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--danger-strong);
+}
+
+.errorDot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--danger);
+}
+
+/* ── The control itself ──────────────────────────────────────────────── */
+.control {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-control);
+  color: var(--iron);
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.control:hover:not(:disabled):not(:focus) {
+  border-color: var(--steel-soft);
+}
+
+.control:disabled {
+  background: var(--mist);
+  color: var(--steel);
+  cursor: not-allowed;
+}
+
+.invalid {
+  border-color: var(--danger);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.select {
+  appearance: none;
+  padding-right: var(--space-6);
+  /* Chevron drawn in --steel; inlined so the CSP-free build has no extra fetch. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%2364707B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  cursor: pointer;
+}
+
+/* Search input with a leading glyph. */
+.searchWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchIcon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--steel);
+  pointer-events: none;
+}
+
+.searchWrap .control {
+  padding-left: var(--space-6);
+}

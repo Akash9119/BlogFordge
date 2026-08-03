@@ -1,0 +1,360 @@
+/* ── Sticky action bar ───────────────────────────────────────────────── */
+.bar {
+  position: sticky;
+  top: var(--topbar-h);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-5);
+  padding: var(--space-3) var(--space-6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--filing);
+}
+
+.barLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--steel);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back:hover {
+  color: var(--iron);
+}
+
+.barMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.barActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* The ignite flash: fires once, on the publish click. This is the only glow
+   effect in the product — §5. */
+.igniteWrap {
+  display: inline-flex;
+  border-radius: var(--radius-control);
+}
+
+.igniting {
+  animation: ignite 180ms var(--ease);
+}
+
+@keyframes ignite {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(242, 100, 25, 0);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 16px 3px rgba(242, 100, 25, 0.5);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(242, 100, 25, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .igniting {
+    animation: none;
+  }
+}
+
+/* ── Layout ──────────────────────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: sticky;
+  top: calc(var(--topbar-h) + 72px);
+}
+
+/* ── Title + slug ────────────────────────────────────────────────────── */
+.titleInput {
+  width: 100%;
+  padding: var(--space-3) 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--anvil);
+}
+
+.titleInput::placeholder {
+  color: var(--steel-soft);
+}
+
+.titleInput:focus {
+  outline: none;
+}
+
+.titleInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.slugRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--filing);
+  margin-bottom: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+  overflow: hidden;
+}
+
+.slugValue {
+  color: var(--quench-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slugPending {
+  color: var(--ember-strong);
+}
+
+/* ── Markdown editor ─────────────────────────────────────────────────── */
+.editorHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.editorStats {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  align-items: stretch;
+}
+
+.splitSingle {
+  grid-template-columns: 1fr;
+}
+
+.pane {
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 520px;
+}
+
+.paneLabel {
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--filing);
+  background: var(--mist);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.markdown {
+  flex: 1;
+  width: 100%;
+  padding: var(--space-4);
+  border: none;
+  background: transparent;
+  resize: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: 1.7;
+  color: var(--iron);
+}
+
+.markdown:focus {
+  outline: none;
+}
+
+.markdownInvalid {
+  border-color: var(--danger);
+}
+
+.preview {
+  flex: 1;
+  padding: var(--space-4);
+  overflow-y: auto;
+}
+
+.previewEmpty {
+  color: var(--steel-soft);
+  font-size: var(--text-small);
+}
+
+.fieldError {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--danger-strong);
+}
+
+/* ── Sidebar cards ───────────────────────────────────────────────────── */
+.statusRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.statusHint {
+  margin-top: var(--space-3);
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+}
+
+.metaList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--filing);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.metaValue {
+  color: var(--iron);
+}
+
+/* Vertical rhythm for stacked fields inside a sidebar panel. */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.chipField {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.chipEmpty {
+  font-size: var(--text-small);
+  color: var(--steel-soft);
+}
+
+/* ── Featured image ──────────────────────────────────────────────────── */
+.cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--filing);
+  background: var(--mist);
+  margin-bottom: var(--space-3);
+}
+
+.coverEmpty {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--filing);
+  border-radius: var(--radius-control);
+  color: var(--steel-soft);
+  margin-bottom: var(--space-3);
+}
+
+@media (max-width: 1080px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .side {
+    position: static;
+  }
+  .split {
+    grid-template-columns: 1fr;
+  }
+  .pane {
+    min-height: 360px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    top: var(--topbar-h);
+  }
+  .barActions {
+    width: 100%;
+  }
+  .barActions > * {
+    flex: 1;
+  }
+  .titleInput {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2-lh);
+  }
+}

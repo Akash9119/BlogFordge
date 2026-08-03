@@ -1,0 +1,75 @@
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding-top: var(--space-4);
+}
+
+/* "SHOWING 11–20 OF 42" — measured facts, so: mono. */
+.summary {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.page {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+  color: var(--slate);
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.page:hover:not(:disabled):not(.current) {
+  background: var(--mist);
+  color: var(--iron);
+}
+
+.page:disabled {
+  color: var(--steel-soft);
+  cursor: not-allowed;
+}
+
+.current {
+  background: var(--surface);
+  border-color: var(--filing);
+  color: var(--anvil);
+  font-weight: 600;
+}
+
+.gap {
+  color: var(--steel-soft);
+  padding: 0 var(--space-1);
+  font-family: var(--font-mono);
+}
+
+@media (max-width: 640px) {
+  .pager {
+    justify-content: center;
+  }
+  .summary {
+    width: 100%;
+    text-align: center;
+  }
+}

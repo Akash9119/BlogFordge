@@ -1,0 +1,160 @@
+.shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+}
+
+/* ── Header: hairline, no shadow, sticky ─────────────────────────────── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--surface);
+  border-bottom: 1px solid var(--filing);
+}
+
+.headerInner {
+  max-width: var(--reader-max);
+  margin: 0 auto;
+  padding: 0 var(--space-5);
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.navLink {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-control);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--slate);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.navLink:hover {
+  background: var(--mist);
+  color: var(--iron);
+}
+
+.navLinkActive {
+  color: var(--anvil);
+  background: var(--mist);
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* Mobile nav toggle */
+.menuButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-control);
+  color: var(--slate);
+}
+
+.menuButton:hover {
+  background: var(--mist);
+}
+
+.mobileNav {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-5) var(--space-4);
+  border-top: 1px solid var(--filing);
+  background: var(--surface);
+}
+
+.mobileNavOpen {
+  display: flex;
+}
+
+.mobileNav .navLink {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Content ─────────────────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  width: 100%;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+.footer {
+  border-top: 1px solid var(--filing);
+  background: var(--surface);
+  margin-top: var(--space-9);
+}
+
+.footerInner {
+  max-width: var(--reader-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.footerNote {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.footerLinks {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.footerLink {
+  font-size: var(--text-small);
+  color: var(--slate);
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  color: var(--quench-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .nav {
+    display: none;
+  }
+  .menuButton {
+    display: inline-flex;
+  }
+  .headerInner {
+    padding: 0 var(--space-4);
+    justify-content: space-between;
+  }
+}

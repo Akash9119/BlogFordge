@@ -1,0 +1,124 @@
+/*
+ * The Temperature Lifecycle — design_guide.md §5.
+ * Status is heat: draft is hot on the anvil, published is quenched and set,
+ * archived has gone cold. Every place status appears uses this component.
+ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-chip);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+  white-space: nowrap;
+  /* The morph the publish moment rides on: ember → quench over 400ms. */
+  transition:
+    background-color var(--dur-morph) var(--ease),
+    color var(--dur-morph) var(--ease);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  transition: background-color var(--dur-morph) var(--ease);
+}
+
+/* ── Post temperatures ───────────────────────────────────────────────── */
+.draft {
+  background: var(--ember-tint);
+  color: var(--ember-strong);
+}
+
+.published {
+  background: var(--quench-tint);
+  color: var(--quench-strong);
+}
+
+.archived {
+  background: var(--mist);
+  color: var(--slate);
+}
+
+/* ── Comment temperatures ────────────────────────────────────────────── */
+.pending {
+  background: var(--pending-tint);
+  color: #8a5710; /* --pending darkened for AA on its own tint */
+}
+
+.approved {
+  background: var(--quench-tint);
+  color: var(--quench-strong);
+}
+
+.rejected {
+  background: var(--danger-tint);
+  color: var(--danger-strong);
+}
+
+/* ── Role badges — informational, deliberately quiet ─────────────────── */
+.role {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px var(--space-2);
+  border-radius: var(--radius-chip);
+  border: 1px solid var(--filing);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--slate);
+  background: var(--surface);
+}
+
+/* Admin is the only role that gets tinted — it's the one that can do damage. */
+.roleAdmin {
+  border-color: transparent;
+  background: var(--quench-tint);
+  color: var(--quench-strong);
+}
+
+.inactive {
+  background: var(--mist);
+  color: var(--steel);
+  border-color: transparent;
+}
+
+/* ── The ignite flash: fires once on the publish click ───────────────── */
+.igniting {
+  animation: ignite 180ms var(--ease);
+}
+
+@keyframes ignite {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(242, 100, 25, 0);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 12px 2px rgba(242, 100, 25, 0.45);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(242, 100, 25, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .igniting {
+    animation: none;
+  }
+  .badge,
+  .dot {
+    transition: none;
+  }
+}

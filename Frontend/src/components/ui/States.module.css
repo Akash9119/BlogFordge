@@ -1,0 +1,129 @@
+/*
+ * Loading, empty, and error are components, not afterthoughts — §11.
+ * Skeletons reserve the exact space the loaded content will take, so nothing
+ * shifts when data lands (§13: no layout shift).
+ */
+
+.skeleton {
+  background: var(--mist);
+  border-radius: var(--radius-chip);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+  }
+}
+
+/* ── Empty / error panel ─────────────────────────────────────────────── */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-8) var(--space-5);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+.inset {
+  border: none;
+  background: transparent;
+  padding: var(--space-7) var(--space-5);
+}
+
+.glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-control);
+  background: var(--mist);
+  color: var(--steel);
+}
+
+.glyphDanger {
+  background: var(--danger-tint);
+  color: var(--danger-strong);
+}
+
+.title {
+  font-family: var(--font-ui);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: 600;
+  color: var(--anvil);
+  max-width: 46ch;
+}
+
+.body {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+  max-width: 52ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-top: var(--space-2);
+}
+
+/* ── Inline spinner for in-place refreshes ───────────────────────────── */
+.inlineLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  color: var(--steel);
+  font-size: var(--text-small);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--steel-soft);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

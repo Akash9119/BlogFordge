@@ -1,0 +1,247 @@
+.chart {
+  position: relative;
+  width: 100%;
+}
+
+/* Refetches hold the previous render at reduced opacity — never a skeleton
+   flash, never a layout jump. */
+.stale {
+  opacity: 0.55;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  overflow: visible;
+}
+
+.grid {
+  stroke: var(--filing);
+  stroke-width: 1;
+}
+
+.axisText {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  fill: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  fill: none;
+  stroke: var(--quench);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.area {
+  fill: var(--quench);
+  opacity: 0.1;
+}
+
+.endDot {
+  fill: var(--quench);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.endLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--iron);
+}
+
+.crosshair {
+  stroke: var(--steel-soft);
+  stroke-width: 1;
+}
+
+.hoverDot {
+  fill: var(--quench);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+/* Tooltip is an overlay, so it earns a shadow. */
+.tooltip {
+  position: absolute;
+  z-index: 5;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-overlay);
+  white-space: nowrap;
+}
+
+.tooltipDate {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  color: var(--steel);
+}
+
+.tooltipValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--iron);
+}
+
+.tooltipKey {
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--quench);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.headText {
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.subtitle {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.toggle {
+  font-size: var(--text-small);
+  color: var(--quench-strong);
+  font-weight: 500;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-chip);
+  flex-shrink: 0;
+}
+
+.toggle:hover {
+  background: var(--quench-tint);
+}
+
+/* The table-view twin: every value reachable without hovering. */
+.tableWrap {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-control);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--filing);
+  text-align: left;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  background: var(--mist);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-weight: 500;
+}
+
+.table td:last-child,
+.table th:last-child {
+  text-align: right;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.empty {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  color: var(--steel-soft);
+  font-size: var(--text-small);
+}
+
+/* ── Stat tiles ──────────────────────────────────────────────────────── */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+}
+
+.tileLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+/*
+ * Mono numerals are a deliberate brand rule (§3: "data wears mono"), so the
+ * figure keeps JetBrains Mono. Monospace digits are already equal-width, so
+ * `tabular-nums` would be a no-op here — it stays on axis ticks and tables.
+ */
+.tileValue {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--anvil);
+}
+
+.tileFoot {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+}

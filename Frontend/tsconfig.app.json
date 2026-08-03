@@ -15,7 +15,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path alias — `@/lib/api` instead of ../../../lib/api.
+       Resolved relative to this file; `baseUrl` is deprecated in TS 6. */
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
     /* Linting */
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
