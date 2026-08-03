@@ -7,6 +7,7 @@ const Post = require('../models/Post');
 const Category = require('../models/Category');
 const Tag = require('../models/Tag');
 const Comment = require('../models/Comment');
+const Analytics = require('../models/Analytics');
 
 const AUTHOR_FIELDS = 'name avatar role';
 const LIST_PROJECTION = '-content'; // full content only on the detail endpoint
@@ -157,7 +158,11 @@ async function deletePost(req, res) {
   if (!isStaff(req.user) && !ownsDraft) {
     throw new ApiError(403, 'Authors can only delete their own drafts');
   }
-  await Promise.all([post.deleteOne(), Comment.deleteMany({ post: post._id })]);
+  await Promise.all([
+    post.deleteOne(),
+    Comment.deleteMany({ post: post._id }),
+    Analytics.deleteMany({ post: post._id }),
+  ]);
   return ok(res, { message: 'Post deleted' });
 }
 

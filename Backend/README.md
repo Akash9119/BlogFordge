@@ -13,6 +13,20 @@ npm run dev               # nodemon dev server
 npm start                 # production
 ```
 
+## Smoke test
+
+With the server already running, in a second terminal:
+
+```bash
+npm run smoke                                          # targets http://127.0.0.1:$PORT
+SMOKE_BASE_URL=https://your-api.onrender.com npm run smoke   # or a deployed instance
+```
+
+38 checks covering auth, RBAC, validation, taxonomy, the draft→publish workflow,
+public visibility rules, pagination/search, analytics, comments, and refresh-token
+rotation with reuse detection. It logs in as the seeded admin (`ADMIN_*` in `.env`)
+and deletes everything it creates. Exits non-zero on the first failed run.
+
 Public registration always creates `author` accounts — admins are seeded or promoted by another admin.
 
 ## Response envelope
