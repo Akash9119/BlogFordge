@@ -1,0 +1,45 @@
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--radius-control);
+  background: var(--mist);
+  border: 1px solid var(--filing);
+  color: var(--slate);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.byline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.bylineName {
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--iron);
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.bylineName:hover {
+  color: var(--quench-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

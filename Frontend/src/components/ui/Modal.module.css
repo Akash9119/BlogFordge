@@ -1,0 +1,135 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--scrim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: fade var(--dur) var(--ease);
+}
+
+/* Overlays are the only place shadow is allowed — §4. */
+.modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100dvh - var(--space-8));
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-radius: var(--radius-modal);
+  box-shadow: var(--shadow-overlay);
+  animation: rise var(--dur) var(--ease);
+}
+
+.wide {
+  max-width: 880px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--filing);
+}
+
+.title {
+  font-family: var(--font-ui);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.description {
+  margin-top: var(--space-1);
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin: -4px -4px 0 0;
+  border-radius: var(--radius-control);
+  color: var(--steel);
+  flex-shrink: 0;
+}
+
+.close:hover {
+  background: var(--mist);
+  color: var(--iron);
+}
+
+.body {
+  padding: var(--space-5);
+  overflow-y: auto;
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--slate);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--filing);
+}
+
+/* Consequence callout — "this also signs them out everywhere". */
+.consequence {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--pending-tint);
+  color: #6f460d;
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+}
+
+.consequenceIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--pending);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (max-width: 640px) {
+  .scrim {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal {
+    max-width: none;
+    border-radius: var(--radius-modal) var(--radius-modal) 0 0;
+    max-height: 90dvh;
+  }
+  .footer {
+    flex-direction: column-reverse;
+  }
+  .footer > * {
+    width: 100%;
+  }
+}

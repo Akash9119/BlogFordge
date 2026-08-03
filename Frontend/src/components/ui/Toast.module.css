@@ -1,0 +1,108 @@
+.region {
+  position: fixed;
+  right: var(--space-5);
+  bottom: var(--space-5);
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(380px, calc(100vw - var(--space-8)));
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-left-width: 3px;
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-toast);
+  animation: slide-in var(--dur) var(--ease);
+}
+
+.success {
+  border-left-color: var(--quench);
+}
+
+.info {
+  border-left-color: var(--quench);
+}
+
+.error {
+  border-left-color: var(--danger);
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.success .icon,
+.info .icon {
+  color: var(--quench);
+}
+
+.error .icon {
+  color: var(--danger);
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.message {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--iron);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+/* Mono timestamp — every toast is stamped, §7. */
+.time {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.dismiss {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: -2px -4px 0 0;
+  border-radius: var(--radius-chip);
+  color: var(--steel);
+}
+
+.dismiss:hover {
+  background: var(--mist);
+  color: var(--iron);
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (max-width: 640px) {
+  .region {
+    right: var(--space-3);
+    left: var(--space-3);
+    bottom: var(--space-3);
+    width: auto;
+  }
+}

@@ -1,0 +1,152 @@
+.section {
+  max-width: var(--reading-measure);
+  margin: var(--space-8) auto 0;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--filing);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Composer ────────────────────────────────────────────────────────── */
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  /* The post page is --surface, so inset panels step down to --paper. */
+  background: var(--paper);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  margin-bottom: var(--space-6);
+}
+
+.composerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.composerNote {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+}
+
+.signInPrompt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-4);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  margin-bottom: var(--space-6);
+  font-size: var(--text-small);
+  color: var(--slate);
+}
+
+/* ── Thread ──────────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.commentHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.commentAuthor {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.commentTime {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+}
+
+.commentBody {
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--slate);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+/* Replies indent behind a hairline rather than a nested card. */
+.replies {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-4);
+  margin-left: var(--space-4);
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--filing);
+}
+
+/* The author's own comment, still waiting on a moderator. */
+.pendingOwn {
+  padding: var(--space-3) var(--space-4);
+  border: 1px dashed var(--pending);
+  border-radius: var(--radius-card);
+  background: var(--pending-tint);
+}
+
+.replyForm {
+  margin-top: var(--space-3);
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--filing);
+}
+
+@media (max-width: 640px) {
+  .replies {
+    margin-left: 0;
+    padding-left: var(--space-3);
+  }
+}

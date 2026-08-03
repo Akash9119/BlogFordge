@@ -1,0 +1,113 @@
+/* Flat surface with a hairline border. Steel doesn't float — no shadow. */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--filing);
+}
+
+.headerText {
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.subtitle {
+  margin-top: 2px;
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--steel);
+}
+
+.body {
+  padding: var(--space-5);
+}
+
+.flush {
+  padding: 0;
+}
+
+/* Toolbar strip: filters, search, sort. Wraps rather than scrolls. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.toolbarSearch {
+  flex: 1 1 240px;
+  min-width: 180px;
+}
+
+.toolbarSpacer {
+  flex: 1;
+}
+
+/* Segmented status filter — quiet until selected. */
+.segments {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  background: var(--mist);
+  border-radius: var(--radius-control);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-chip);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--slate);
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.segment:hover:not(.segmentActive) {
+  color: var(--iron);
+}
+
+.segmentActive {
+  background: var(--surface);
+  color: var(--anvil);
+  box-shadow: inset 0 0 0 1px var(--filing);
+}
+
+.segmentCount {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--steel);
+}
+
+@media (max-width: 640px) {
+  .body {
+    padding: var(--space-4);
+  }
+  .header {
+    padding: var(--space-4);
+  }
+  .segments {
+    width: 100%;
+    overflow-x: auto;
+  }
+}

@@ -1,0 +1,177 @@
+.container {
+  max-width: var(--reader-max);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5) 0;
+}
+
+/* ── Page masthead ───────────────────────────────────────────────────── */
+.masthead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--filing);
+  margin-bottom: var(--space-6);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ember-strong);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--anvil);
+  max-width: 20ch;
+}
+
+.lede {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  color: var(--slate);
+  max-width: 60ch;
+}
+
+/* Author page header: avatar + bio. */
+.authorHead {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.authorMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* ── Filters ─────────────────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-6);
+}
+
+.search {
+  flex: 1 1 260px;
+  max-width: 360px;
+}
+
+.chipRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.chipRowLabel {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  margin-right: var(--space-1);
+}
+
+/* ── Sections ────────────────────────────────────────────────────────── */
+.section {
+  margin-bottom: var(--space-7);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.sectionTitle {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.resultCount {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.bottom {
+  padding-bottom: var(--space-8);
+}
+
+/* ── Taxonomy directory (categories / tags index) ────────────────────── */
+.termGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.termCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  text-decoration: none;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.termCard:hover {
+  border-color: var(--quench);
+}
+
+.termName {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.termSlug {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+}
+
+.termDescription {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--slate);
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: var(--space-6) var(--space-4) 0;
+  }
+  .title {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2-lh);
+  }
+  .search {
+    max-width: none;
+  }
+}

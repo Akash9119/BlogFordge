@@ -1,0 +1,51 @@
+.member {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.memberText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.memberName {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-body);
+  font-weight: 500;
+  color: var(--anvil);
+}
+
+.you {
+  padding: 1px 5px;
+  border-radius: var(--radius-chip);
+  background: var(--mist);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.memberEmail {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.roleSummary {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-control);
+  background: var(--mist);
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--slate);
+}

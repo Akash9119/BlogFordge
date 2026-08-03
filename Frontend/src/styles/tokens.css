@@ -1,0 +1,125 @@
+/*
+ * BlogForge design tokens — "Blued Steel & Ember"
+ * These are the values from design_guide.md §2–§4. They are the single source
+ * of truth: no component may hard-code a hex, size, or radius.
+ */
+
+:root {
+  /* ── Neutrals (blued steel) ─────────────────────────────────────────── */
+  --anvil: #14181d; /* highest-contrast ink; Workshop sidebar bg */
+  --iron: #1e252c; /* body text on light surfaces */
+  --slate: #384049; /* secondary text */
+  --steel: #64707b; /* muted/tertiary text, icon default */
+  --steel-soft: #8a96a1; /* placeholder text, disabled */
+  --filing: #d3dbe1; /* PRIMARY divider / border colour */
+  --mist: #e9eef2; /* raised/inset surface, hover row, skeleton base */
+  --paper: #f4f7f9; /* app background (cool paper) */
+  --surface: #ffffff; /* cards, panels, reading column */
+
+  /* ── Ember (the hot accent — molten metal, NOT terracotta) ──────────── */
+  --ember-tint: #fce9da;
+  --ember: #f26419; /* decorative / "ignite" state only */
+  --ember-btn: #d9530e; /* primary button base */
+  --ember-strong: #b5420a; /* ember TEXT on white (AA) + button hover */
+
+  /* ── Quench (the cooled / published steel-blue) ─────────────────────── */
+  --quench-tint: #e4f0f5;
+  --quench: #2c7a9e; /* cooled-status accent, charts, focus ring */
+  --quench-strong: #16506b; /* quench text on white (AA), Workshop links */
+
+  /* ── Semantic ───────────────────────────────────────────────────────── */
+  --danger: #d23a2a;
+  --danger-strong: #b22f22;
+  --pending: #e0912a;
+  --pending-tint: #fbeed9;
+  --danger-tint: #fae2df;
+
+  /* Sidebar-local derivations: the only place we sit on --anvil. */
+  --on-anvil: #e9eef2;
+  --on-anvil-muted: #8a96a1;
+  --anvil-raised: #1e252c;
+  --anvil-line: #2a323a;
+
+  /* ── Typography ─────────────────────────────────────────────────────── */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Geist', 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-reading: 'Newsreader', 'Source Serif 4', Georgia, serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', monospace;
+
+  /* Type scale — 1.25 ratio. Each pair is size / line-height. */
+  --text-display-xl: 3.5rem; /* 56 */
+  --text-display-xl-lh: 3.75rem; /* 60 */
+  --text-display-l: 2.5rem; /* 40 */
+  --text-display-l-lh: 2.875rem; /* 46 */
+  --text-h1: 2rem; /* 32 */
+  --text-h1-lh: 2.5rem; /* 40 */
+  --text-h2: 1.5rem; /* 24 */
+  --text-h2-lh: 2rem; /* 32 */
+  --text-h3: 1.25rem; /* 20 */
+  --text-h3-lh: 1.75rem; /* 28 */
+  --text-reading: 1.1875rem; /* 19 */
+  --text-reading-lh: 2rem; /* 32 */
+  --text-body: 1rem; /* 16 */
+  --text-body-lh: 1.5rem; /* 24 */
+  --text-small: 0.875rem; /* 14 */
+  --text-small-lh: 1.25rem; /* 20 */
+  --text-label: 0.75rem; /* 12 */
+  --text-label-lh: 1rem; /* 16 */
+
+  /* ── Space (4px base — use only these) ──────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* ── Radius — tool-like, neither pill nor zero ──────────────────────── */
+  --radius-chip: 6px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-modal: 16px;
+
+  /* ── Elevation — overlays only. Content surfaces stay flat. ─────────── */
+  --shadow-overlay: 0 8px 24px rgba(20, 24, 29, 0.12);
+  --shadow-toast: 0 4px 16px rgba(20, 24, 29, 0.14);
+  --scrim: rgba(20, 24, 29, 0.5);
+
+  /* ── Motion ─────────────────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1); /* ease-out */
+  --dur-fast: 150ms;
+  --dur: 200ms;
+  --dur-morph: 400ms; /* ember → quench, the publish payoff */
+
+  /* ── Layout ─────────────────────────────────────────────────────────── */
+  --reader-max: 1200px;
+  --reading-measure: 72ch;
+  --workshop-max: 1280px;
+  --sidebar-w: 248px;
+  --sidebar-rail-w: 64px;
+  --topbar-h: 64px;
+
+  /* ── Focus — 2px quench, 2px offset, on everything interactive ──────── */
+  --focus-ring: 2px solid var(--quench);
+  --focus-offset: 2px;
+}
+
+/* The mono label: eyebrows, statuses, dates, counts, kickers. A recurring
+   texture across both surfaces — §3. */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label-lh);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Any measured fact — numbers, timestamps, slugs, IDs. */
+.mono-data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

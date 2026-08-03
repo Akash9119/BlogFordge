@@ -1,0 +1,184 @@
+/*
+ * The article reading column — Newsreader at 19/32, ~72ch measure.
+ * This is the ONLY place the reading serif is used (§3).
+ */
+
+.prose {
+  font-family: var(--font-reading);
+  font-size: var(--text-reading);
+  line-height: var(--text-reading-lh);
+  color: var(--iron);
+}
+
+.prose > * + * {
+  margin-top: var(--space-5);
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-display);
+  color: var(--anvil);
+  letter-spacing: -0.015em;
+  /* Collapses against the following element's margin-top — a heading sits
+     close to the text it introduces, far from the text above it. */
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-2);
+}
+
+.prose h2 {
+  font-size: var(--text-h2);
+  line-height: var(--text-h2-lh);
+  font-weight: 600;
+}
+
+.prose h3 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: 600;
+}
+
+.prose h4 {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--quench-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.prose a:hover {
+  text-decoration-thickness: 2px;
+}
+
+.prose strong {
+  font-weight: 600;
+  color: var(--anvil);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: var(--space-5);
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: var(--space-2);
+}
+
+.prose li::marker {
+  color: var(--steel);
+}
+
+/* Ember bar on the quote — one of the few decorative ember uses. */
+.prose blockquote {
+  padding-left: var(--space-5);
+  border-left: 3px solid var(--ember);
+  color: var(--slate);
+  font-style: italic;
+}
+
+/* Code is data, so it wears mono. */
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--mist);
+  color: var(--iron);
+}
+
+.prose pre {
+  padding: var(--space-4);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--filing);
+  background: var(--mist);
+  overflow-x: auto;
+  /* Own metrics — inheriting the article's 32px leading makes code sprawl. */
+  font-size: var(--text-small);
+  line-height: 1.65;
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.prose img {
+  width: 100%;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--filing);
+}
+
+.prose hr {
+  border-top: 1px solid var(--filing);
+  margin-block: var(--space-7);
+}
+
+/* Tables scroll inside their own container — the page never scrolls sideways. */
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-control);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-ui);
+  font-size: var(--text-small);
+}
+
+.prose th,
+.prose td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--filing);
+  text-align: left;
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+  font-weight: 500;
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+/* Compact variant for the editor's live preview pane. */
+.compact {
+  font-size: var(--text-body);
+  line-height: 1.65;
+}
+
+.compact > * + * {
+  margin-top: var(--space-4);
+}
+
+.compact h2 {
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  margin-top: var(--space-5);
+}
+
+.compact h3 {
+  font-size: var(--text-body);
+  margin-top: var(--space-5);
+}

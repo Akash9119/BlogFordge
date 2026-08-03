@@ -1,0 +1,207 @@
+/* Post card — §7. Flat surface, hairline border, no shadow. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.card:hover {
+  border-color: var(--steel-soft);
+}
+
+.card:focus-within {
+  border-color: var(--quench);
+}
+
+.thumb {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  object-fit: cover;
+  background: var(--mist);
+  border-bottom: 1px solid var(--filing);
+}
+
+/* No cover image: a quiet steel field with the forge mark, not a stock photo. */
+.thumbFallback {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  background: var(--mist);
+  border-bottom: 1px solid var(--filing);
+  color: var(--steel-soft);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  flex: 1;
+}
+
+.kickerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 16px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--anvil);
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretched hit area — the whole card is clickable, one tab stop. */
+.titleLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.titleLink:hover {
+  color: var(--quench-strong);
+}
+
+.excerpt {
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--slate);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--filing);
+}
+
+/* All measured facts, so: mono. */
+.stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ── Featured hero variant ───────────────────────────────────────────── */
+.featured {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 0;
+}
+
+.featured .thumb,
+.featured .thumbFallback {
+  aspect-ratio: auto;
+  height: 100%;
+  min-height: 320px;
+  border-bottom: none;
+  border-right: 1px solid var(--filing);
+}
+
+.featured .body {
+  padding: var(--space-6);
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.featured .title {
+  font-size: var(--text-h1);
+  line-height: var(--text-h1-lh);
+}
+
+.featured .excerpt {
+  font-size: var(--text-body);
+  line-height: var(--text-body-lh);
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+/* ── Grid ────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+/* Gentle staggered fade-up on index load — reduced-motion safe (§6). */
+.stagger {
+  animation: fade-up 320ms var(--ease) backwards;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger {
+    animation: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .featured {
+    grid-template-columns: 1fr;
+  }
+  .featured .thumb,
+  .featured .thumbFallback {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+    border-right: none;
+    border-bottom: 1px solid var(--filing);
+  }
+  .featured .body {
+    padding: var(--space-5);
+  }
+  .featured .title {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2-lh);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

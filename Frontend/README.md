@@ -1,73 +1,82 @@
-# React + TypeScript + Vite
+# BlogForge — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + TypeScript + Vite SPA for the BlogForge CMS. Built to `design_guide.md`,
+which is the source of truth for tokens, type, states, and copy — read it before
+changing anything visual.
 
-Currently, two official plugins are available:
+Two surfaces, one codebase, one set of tokens:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **The Reader** (`/`) — the public blog. Calm, editorial, reading-first.
+- **The Workshop** (`/workshop`) — the authenticated dashboard. Dense, tool-like.
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # tsc -b && vite build
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The dev server proxies `/api` and `/health` to `http://127.0.0.1:5050` (the API's
+dev port — 5000 is reserved on Windows). Override with `VITE_API_TARGET`. For a
+deployed API on another origin, set `VITE_API_URL` to its full `/api/v1` base.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Start the API first (`cd ../Backend && npm run dev`), or every screen shows its
+error state.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Stack
+
+| Concern | Choice |
+|---|---|
+| Routing | React Router v7 |
+| Server state | TanStack Query |
+| Styling | CSS custom properties + CSS Modules |
+| Post content | Markdown (`react-markdown` + `remark-gfm`) |
+| Charts | Hand-rolled inline SVG — no chart library |
+
+## Layout
+
 ```
+src/
+  styles/          tokens.css (§2–§4 of the guide) + base.css reset
+  lib/             api client, token store, types, formatters, RBAC capabilities
+  api/             one typed module per API resource
+  context/         AuthProvider; *-context.ts holds the hooks (fast refresh)
+  components/ui/   shared library: Button, Field, Badge, Table, Modal, Toast, States…
+  components/reader/    Reader layout, PostCard, Prose, Comments
+  components/workshop/  Workshop shell, PageHeader, MediaBrowser, LineChart
+  pages/           one folder per surface
+```
+
+## Things worth knowing
+
+**The Temperature Lifecycle** (`components/ui/Badge.tsx`) is the signature element.
+Post and comment status is expressed as heat — draft is ember, published is quench,
+archived is cold steel. Every place status appears uses `StatusBadge`. The publish
+button fires a one-off ignite flash and the badge morphs ember → quench; that is the
+only glow effect in the product. Don't add more.
+
+**Auth.** Access + refresh tokens live in `lib/tokens.ts`. A 401 triggers a
+single-flight refresh (`lib/api.ts`) so a page-load burst of requests can't race
+itself into the API's reuse detection. A failed refresh dispatches
+`blogforge:session-ended`, which `AuthProvider` turns into a hard logout.
+
+**RBAC.** Render by capability from `lib/permissions.ts`, never by role name inline.
+The API is the real boundary; the UI just never offers a control a role can't use.
+
+**Response envelope.** `errors[]` maps to inline field messages, the top-level
+`message` drives the toast or banner, and `meta` drives the one shared pager.
+5xx text is masked before it can reach a screen.
+
+**Markdown, not HTML.** The API stores `content` as a plain string and derives the
+excerpt and reading time from it, so keeping the body free of markup keeps both
+correct. `react-markdown` runs without `rehype-raw`, so post bodies cannot inject
+script — keep it that way.
+
+## Not wired yet
+
+- **AI Reports** (`/workshop/reports`) — a reserved page shell. Phase-1 has no AI
+  endpoints, and none are invented. The layout is ready for the FastAPI service.
+- **Password reset** (`/forgot-password`, `/reset-password`) — screens exist and are
+  disabled, with a notice. The API has no reset endpoints yet.
