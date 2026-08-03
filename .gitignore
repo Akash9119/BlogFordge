@@ -1,0 +1,118 @@
+# ---------------------------------------------------------------------------
+# BlogForge — repo-wide ignore rules.
+# Backend/ and Frontend/ keep their own .gitignore for service-specific paths;
+# this file covers the monorepo root and anything shared across services.
+# ---------------------------------------------------------------------------
+
+# --- Secrets: never commit these -------------------------------------------
+# Real credentials live only in untracked .env files. .env.example is the
+# tracked template and must stay committed.
+.env
+.env.*
+*.env
+!.env.example
+!**/.env.example
+
+# Keys, certificates and service-account credentials
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+*serviceAccount*.json
+*service-account*.json
+credentials.json
+secrets.json
+gha-creds-*.json
+
+# --- Node ------------------------------------------------------------------
+node_modules/
+.npm/
+.yarn/
+.pnp.*
+jspm_packages/
+
+# NOTE: package-lock.json is intentionally NOT ignored — `npm ci` needs it
+# for reproducible installs on Render/Railway.
+
+# --- Logs ------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Build output ----------------------------------------------------------
+dist/
+dist-ssr/
+build/
+out/
+.vite/
+*.tsbuildinfo
+*.local
+
+# --- Test / coverage -------------------------------------------------------
+coverage/
+.nyc_output/
+*.lcov
+
+# --- Runtime & uploads -----------------------------------------------------
+# Multer buffers in memory, but keep these out in case disk storage is used.
+uploads/
+tmp/
+temp/
+*.pid
+*.seed
+
+# --- Python AI microservice (Phase 3) --------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+venv/
+.venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# --- Local vector stores (RAG) ---------------------------------------------
+chroma/
+.chroma/
+chroma_db/
+qdrant_storage/
+*.sqlite3
+
+# --- Editors & IDEs --------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# --- AI / agent tooling (machine-local state) ------------------------------
+.claude/settings.local.json
+.qodo/
+
+# --- OS cruft --------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
