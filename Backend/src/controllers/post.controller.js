@@ -8,6 +8,8 @@ const Category = require('../models/Category');
 const Tag = require('../models/Tag');
 const Comment = require('../models/Comment');
 const Analytics = require('../models/Analytics');
+const Embedding = require('../models/Embedding');
+const aiIndex = require('../services/aiIndex');
 
 const AUTHOR_FIELDS = 'name avatar role';
 const LIST_PROJECTION = '-content'; // full content only on the detail endpoint
@@ -146,6 +148,8 @@ async function updatePost(req, res) {
     if (req.body[field] !== undefined) post[field] = req.body[field];
   }
   await post.save();
+  // A published post that changed is stale in the vector index; re-embed it.
+  if (post.status === 'published') aiIndex.onUpdated(post._id);
   return ok(res, { message: 'Post updated', data: post });
 }
 
@@ -162,6 +166,9 @@ async function deletePost(req, res) {
     post.deleteOne(),
     Comment.deleteMany({ post: post._id }),
     Analytics.deleteMany({ post: post._id }),
+    // Deleted straight from Mongo rather than through the AI service: a deleted
+    // post must stop being retrievable even if that service is down.
+    Embedding.deleteMany({ post: post._id }),
   ]);
   return ok(res, { message: 'Post deleted' });
 }
@@ -175,6 +182,9 @@ async function publishPost(req, res) {
   post.status = 'published';
   post.publishedAt = post.publishedAt || new Date();
   await post.save();
+  // The forge moment is also the ingest moment (README, "How the AI Reports
+  // Work"). Detached on purpose — publishing never waits on an embedding job.
+  aiIndex.onPublished(post._id);
   return ok(res, { message: 'Post published', data: post });
 }
 
@@ -186,6 +196,9 @@ async function archivePost(req, res) {
 
   post.status = 'archived';
   await post.save();
+  // Cold content stops being retrievable — an answer should never cite a post
+  // a reader can no longer open.
+  aiIndex.onArchived(post._id);
   return ok(res, { message: 'Post archived', data: post });
 }
 

@@ -10,5 +10,6 @@ router.use('/tags', require('./tag.routes'));
 router.use('/comments', require('./comment.routes'));
 router.use('/media', require('./media.routes'));
 router.use('/analytics', require('./analytics.routes'));
+router.use('/ai', require('./ai.routes'));
 
 module.exports = router;

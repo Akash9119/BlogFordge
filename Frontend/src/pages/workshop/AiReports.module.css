@@ -1,3 +1,14 @@
+/*
+ * AI Reports — design_guide.md §2–§4, §7, §11.
+ *
+ * Hairlines, no shadows on flat content. Quench (not ember) carries "live" and
+ * every citation: ember stays reserved for the one primary action on the
+ * screen, the Generate button. All measured data — scores, dates, latency,
+ * counts — is set in mono.
+ */
+
+/* ── Status pill (page header) ─────────────────────────────────────────── */
+
 .status {
   display: inline-flex;
   align-items: center;
@@ -11,6 +22,13 @@
   text-transform: uppercase;
   color: var(--steel);
   background: var(--surface);
+  white-space: nowrap;
+}
+
+.statusLive {
+  color: var(--quench-strong);
+  border-color: var(--quench);
+  background: var(--quench-tint);
 }
 
 .statusDot {
@@ -19,6 +37,49 @@
   border-radius: 50%;
   background: var(--steel-soft);
 }
+
+.statusDotLive {
+  background: var(--quench);
+}
+
+/* ── Notice bar (not connected / not indexed) ──────────────────────────── */
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--mist);
+}
+
+.notice > svg {
+  color: var(--steel);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.notice > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.noticeTitle {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--iron);
+}
+
+.noticeBody {
+  margin-top: var(--space-1);
+  font-size: var(--text-small);
+  line-height: var(--text-small-lh);
+  color: var(--slate);
+}
+
+/* ── Composer ──────────────────────────────────────────────────────────── */
 
 .composer {
   display: flex;
@@ -43,6 +104,30 @@
   font-size: var(--text-body);
   line-height: var(--text-body-lh);
   resize: none;
+  cursor: not-allowed;
+}
+
+/* Live: a real input, not the disabled placeholder the reserved shell used. */
+.inputLive {
+  background: var(--surface);
+  color: var(--iron);
+  cursor: text;
+  resize: vertical;
+  min-height: 88px;
+}
+
+.inputLive::placeholder {
+  color: var(--steel-soft);
+}
+
+.inputLive:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-color: var(--quench);
+}
+
+.inputLive:disabled {
+  background: var(--mist);
   cursor: not-allowed;
 }
 
@@ -71,17 +156,64 @@
   color: var(--steel);
 }
 
+.composerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hint {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel-soft);
+  white-space: nowrap;
+}
+
+/* ── Results ───────────────────────────────────────────────────────────── */
+
 .results {
   margin-top: var(--space-5);
 }
 
-.plan {
-  margin-top: var(--space-5);
+.turn {
+  padding-bottom: var(--space-5);
+}
+
+/* Applied to every turn after the first — a hairline between exchanges. */
+.turnDivider {
   padding-top: var(--space-5);
   border-top: 1px solid var(--filing);
 }
 
-.planTitle {
+.asked {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.question {
+  margin-top: var(--space-2);
+  font-size: var(--text-h3);
+  line-height: var(--text-h3-lh);
+  color: var(--anvil);
+  font-weight: 500;
+}
+
+.answer {
+  margin-top: var(--space-4);
+}
+
+/* ── Citations ─────────────────────────────────────────────────────────── */
+
+.sources {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--filing);
+}
+
+.sourcesLabel {
   font-family: var(--font-mono);
   font-size: var(--text-label);
   letter-spacing: 0.06em;
@@ -90,22 +222,147 @@
   margin-bottom: var(--space-3);
 }
 
-.planList {
+.sourceList {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  list-style: none;
 }
 
-.planList li {
+.source {
   display: flex;
-  align-items: center;
   gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--filing);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+/* The number matches the [1] in the answer above it — same index, same face. */
+.sourceIndex {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-chip);
+  background: var(--quench-tint);
+  color: var(--quench-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+}
+
+.sourceBody {
+  min-width: 0;
+}
+
+.sourceTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-body);
+  font-weight: 500;
+  color: var(--quench-strong);
+  text-decoration: none;
+}
+
+.sourceTitle:hover {
+  text-decoration: underline;
+}
+
+.sourceTitle svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.sourceExcerpt {
+  margin-top: var(--space-1);
   font-size: var(--text-small);
   line-height: var(--text-small-lh);
   color: var(--slate);
 }
 
-.planList svg {
-  color: var(--quench);
-  flex-shrink: 0;
+.sourceMeta {
+  margin-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+/* ── Run metadata ──────────────────────────────────────────────────────── */
+
+.meta {
+  margin-top: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--steel-soft);
+}
+
+.metaDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--filing);
+}
+
+/* ── Working state ─────────────────────────────────────────────────────── */
+
+.working {
+  margin-top: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.workingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--quench);
+  animation: pulse 1.2s var(--ease) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workingDot {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 640px) {
+  .composerFoot {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .composerActions {
+    justify-content: space-between;
+  }
 }

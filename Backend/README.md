@@ -11,6 +11,8 @@ cp .env.example .env      # fill in MONGODB_URI, JWT secrets, Cloudinary keys
 npm run seed:admin        # creates the first admin (uses ADMIN_* vars from .env)
 npm run dev               # nodemon dev server
 npm start                 # production
+
+npm run ai:reindex        # rebuild the RAG corpus (see "AI layer" below)
 ```
 
 ## Smoke test
@@ -69,8 +71,33 @@ Errors: `{ "success": false, "message": "...", "errors": [{ "field": "...", "mes
 | DELETE | `/media/:id` | owner/admin | also removes the Cloudinary asset |
 | GET | `/analytics/overview` | editor/admin | totals, posts by status, top posts, daily views (`?from=&to=`) |
 | GET | `/analytics/posts/:postId` | staff or post author | daily view series |
+| GET | `/ai/status` | auth | is the AI service live, and how much is indexed |
+| POST | `/ai/reports` | auth (rate-limited) | RAG answer + source citations; `history` for follow-ups |
+| POST | `/ai/assist` | auth (rate-limited) | `summary` · `seo` · `topics` · `improve` |
+| POST | `/ai/reindex` | admin | rebuild the vector corpus from every published post |
 
 \* anonymous requests see published content only; authenticated authors additionally see their own drafts/archived posts.
+
+## AI layer (Phase 3)
+
+The `/ai/*` routes proxy the FastAPI RAG service in `../ai-service` — clients
+never reach it directly, so auth and RBAC are enforced here, once. Set
+`AI_SERVICE_URL` + `AI_SERVICE_TOKEN` in `.env` to enable them; leave
+`AI_SERVICE_URL` empty and the routes answer 503 while the rest of the API is
+completely unaffected.
+
+- **Ingest happens on publish.** `PATCH /posts/:id/publish` fires the index call
+  detached — publishing never waits on an embedding job, and a dead AI service
+  can never fail or hang a publish. Editing a published post re-indexes it;
+  archiving or deleting one drops its vectors.
+- **Repair with `npm run ai:reindex`** (add `-- --force` to re-embed everything).
+  That is what covers posts published before the AI service existed, or while it
+  was down.
+- **`embeddings` is owned by the AI service.** Node declares the model only to
+  cascade a post deletion and to count the corpus — both must keep working when
+  that service is offline.
+- **AI calls are budgeted separately**: 30 per user per hour, keyed by user id
+  rather than IP, because they are the only endpoints that cost money per call.
 
 ## Production notes
 

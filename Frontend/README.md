@@ -74,9 +74,15 @@ excerpt and reading time from it, so keeping the body free of markup keeps both
 correct. `react-markdown` runs without `rehype-raw`, so post bodies cannot inject
 script — keep it that way.
 
+**AI Reports** (`/workshop/reports`) is wired to `POST /ai/reports`, which the API
+proxies to the FastAPI RAG service. Answers are a thread: each question replays
+the previous turns, so a follow-up is answered against the same conversation.
+The `[n]` markers in an answer index into the source list below it — the service
+drops uncited sources and renumbers what is left, so the two can never disagree.
+The page reads `GET /ai/status` first and explains itself when the service is
+off or the corpus is empty, rather than failing.
+
 ## Not wired yet
 
-- **AI Reports** (`/workshop/reports`) — a reserved page shell. Phase-1 has no AI
-  endpoints, and none are invented. The layout is ready for the FastAPI service.
 - **Password reset** (`/forgot-password`, `/reset-password`) — screens exist and are
   disabled, with a notice. The API has no reset endpoints yet.

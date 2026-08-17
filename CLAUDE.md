@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-BlogForge has completed **Phase 1 (Backend)**: `Backend/` contains the full Express 5 + Mongoose 9 API (auth, RBAC, posts, taxonomy, comments, media, analytics — see `Backend/README.md` for endpoints and setup). `Frontend/` holds a Vite + React + TypeScript scaffold. The AI microservice (`ai-service/`) does not exist yet.
+BlogForge has completed **Phase 1 (Backend)**, **Phase 2 (Frontend)**, and **Phase 3 (GenAI)**.
+
+- `Backend/` — the full Express 5 + Mongoose 9 API (auth, RBAC, posts, taxonomy, comments, media, analytics, plus the `/ai/*` proxy routes). See `Backend/README.md`.
+- `Frontend/` — the React 19 + Vite SPA: the Reader and the Workshop, built to `Frontend/design_guide.md`. AI Reports is wired.
+- `ai-service/` — the FastAPI + LangChain RAG microservice. See `ai-service/README.md`.
+
+Remaining: **Phase 4** — the WordPress plugin, AI suggestions surfaced in the post editor, and deployment.
 
 ## Commands
 
@@ -17,9 +23,16 @@ npm start                                   # production
 # React frontend (Vite + TS)
 cd Frontend && npm install && npm run dev
 
-# Python AI microservice (Phase 3 — not yet created)
-cd ai-service && pip install -r requirements.txt && uvicorn main:app --reload
+# Python AI microservice (FastAPI + LangChain, Python 3.11+)
+cd ai-service && python -m venv .venv && .venv/Scripts/activate
+pip install -r requirements.txt && python main.py   # or: uvicorn main:app --reload
+
+cd Backend && npm run ai:reindex             # rebuild the RAG corpus
+npm run ai:reindex -- --force                # re-embed everything
 ```
+
+Ports in development: API `5050` (5000 is reserved on this machine), Vite `5173`,
+AI service `8010` (8000 is occupied). All three are set in the respective `.env` files.
 
 ## Architecture
 
@@ -55,18 +68,34 @@ Unified JWT system shared across all three clients: short-lived access token + r
 
 ## AI / RAG Layer
 
-Three capabilities, all served by the FastAPI microservice:
+Three capabilities, all served by the FastAPI microservice (`ai-service/`):
 
 1. **AI Reports** — natural-language questions answered over your own blog content and analytics
 2. **RAG pipeline** — on publish: chunk → embed → store vectors (Atlas Vector Search, Chroma, or Qdrant); on query: embed question → retrieve top-k chunks → assemble prompt → LLM answers grounded in retrieved context → return answer + source citations
 3. **AI assistance** — content suggestions, post summaries, and SEO recommendations
 
+As built:
+
+- Vectors live in the `embeddings` collection of the same `blogforge` DB. Retrieval uses **Atlas Vector Search**, falling back to in-memory cosine similarity when the index is missing or still building (`VECTOR_SEARCH_MODE`).
+- **Only published posts are indexed.** Ingest fires on publish (detached, so it can never block or fail a publish); editing a published post re-indexes it; archiving or deleting drops its vectors. `npm run ai:reindex` repairs anything missed.
+- The service has no user model. Node resolves the caller's role into a `scope` block; `admin`/`editor` reports draw on the whole blog's analytics, an `author`'s on their own posts only — the same line `GET /analytics/overview` draws.
+- Only the Node API may reach the service, authenticated with the shared `AI_SERVICE_TOKEN`. There is no CORS on the FastAPI app, deliberately.
+- Capability 3 is exposed at `POST /ai/assist` (`summary`, `seo`, `topics`, `improve`). Surfacing it inside the post editor UI is Phase 4.
+
 ## Environment Variables
 
-Each service needs its own `.env`. Expected keys:
+Each service needs its own `.env` (`.env.example` is the tracked template in each).
+
+**`Backend/.env`**
 - `MONGODB_URI`, `JWT_SECRET`, `JWT_REFRESH_SECRET`
 - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-- `OPENAI_API_KEY` (or local embedding model config)
+- `AI_SERVICE_URL`, `AI_SERVICE_TOKEN` — leave `AI_SERVICE_URL` empty to disable the `/ai/*` routes
+
+**`ai-service/.env`**
+- `MONGODB_URI` — the same cluster and database as the API
+- `AI_SERVICE_TOKEN` — must match `Backend/.env`
+- `OPENAI_API_KEY` (or set `OPENAI_BASE_URL` to a local OpenAI-compatible server, or `EMBEDDING_PROVIDER=huggingface`)
+- `EMBEDDING_MODEL` / `EMBEDDING_DIM` / `CHAT_MODEL`, `VECTOR_SEARCH_MODE`
 
 ## API Design
 
