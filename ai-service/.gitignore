@@ -1,0 +1,10 @@
+# Service-local ignores. The repo root .gitignore covers the shared rules
+# (secrets, __pycache__, venvs, local vector stores).
+
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/

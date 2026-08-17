@@ -32,6 +32,13 @@ if (isProduction) {
     console.error(`[env] In production these secrets must be at least 32 characters: ${weak.join(', ')}`);
     process.exit(1);
   }
+  // The AI service has no auth of its own — the shared token is the only thing
+  // in front of it, so an unset one in production is an open door.
+  if (process.env.AI_SERVICE_URL && !process.env.AI_SERVICE_TOKEN) {
+    // eslint-disable-next-line no-console
+    console.error('[env] AI_SERVICE_URL is set but AI_SERVICE_TOKEN is empty — refusing to start.');
+    process.exit(1);
+  }
 }
 
 module.exports = {
@@ -54,5 +61,18 @@ module.exports = {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     apiKey: process.env.CLOUDINARY_API_KEY,
     apiSecret: process.env.CLOUDINARY_API_SECRET,
+  },
+  /**
+   * The FastAPI RAG microservice. Optional on purpose: with no AI_SERVICE_URL
+   * the API boots exactly as before and the /ai routes answer 503 — Phase 3 is
+   * additive, it never becomes a startup dependency of Phase 1.
+   */
+  ai: {
+    enabled: Boolean(process.env.AI_SERVICE_URL),
+    serviceUrl: (process.env.AI_SERVICE_URL || '').replace(/\/+$/, ''),
+    serviceToken: process.env.AI_SERVICE_TOKEN || '',
+    // Generation is slow; indexing is a background call nobody waits on.
+    timeoutMs: Number.parseInt(process.env.AI_SERVICE_TIMEOUT_MS, 10) || 60000,
+    ingestTimeoutMs: Number.parseInt(process.env.AI_INGEST_TIMEOUT_MS, 10) || 120000,
   },
 };

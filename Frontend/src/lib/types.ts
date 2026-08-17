@@ -103,6 +103,69 @@ export interface PostAnalytics {
   daily: DailyViews[]
 }
 
+/* ── AI Reports (Phase 3) ────────────────────────────────────────────────
+ * Mirrors ai-service/app/schemas.py. The FastAPI service serialises camelCase
+ * so these shapes survive the Node proxy unchanged.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+/** A published post the answer was drawn from. `chunks` are its cited passages. */
+export interface AiSource {
+  postId: string
+  title: string
+  slug: string
+  publishedAt: string | null
+  /** Cosine similarity in [0, 1]. */
+  score: number
+  excerpt: string
+  chunks: number[]
+}
+
+export interface AiReport {
+  /** Markdown. Citations appear as [1], [2] and index into `sources`. */
+  answer: string
+  sources: AiSource[]
+  /** False when nothing was retrieved — the answer stands on metrics alone. */
+  grounded: boolean
+  usedAnalytics: boolean
+  retrieval: { strategy: 'atlas' | 'memory' | 'none'; topK: number; chunks: number }
+  model: string
+  latencyMs: number
+}
+
+/** One prior exchange, replayed so a follow-up keeps the thread. */
+export interface AiTurn {
+  question: string
+  answer: string
+}
+
+export interface AiStatus {
+  available: boolean
+  /** Why it isn't available — written to be shown to the user. */
+  reason: string | null
+  publishedPosts: number
+  indexedPosts: number
+  indexedChunks: number
+  embeddingModel?: string
+  chatModel?: string
+  vectorIndex?: { available: boolean; status: string; name: string }
+  lastIndexedAt?: string | null
+}
+
+export type AiAssistTask = 'summary' | 'seo' | 'topics' | 'improve'
+
+export interface AiSuggestion {
+  task: AiAssistTask
+  summary?: string | null
+  excerpt?: string | null
+  metaTitle?: string | null
+  metaDescription?: string | null
+  keywords: string[]
+  topics: Array<{ title: string; angle: string; whyNow: string }>
+  notes: string[]
+  sources: AiSource[]
+  model: string
+}
+
 export interface TokenPair {
   accessToken: string
   refreshToken: string

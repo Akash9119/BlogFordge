@@ -126,29 +126,29 @@ This project is built in three phases — **backend first, then frontend, then G
 
 ### 🟦 Phase 1 — Backend (the spine)
 > *A working, authenticated API before any UI exists.*
-- [ ] Project setup, Express server, MongoDB Atlas connection
-- [ ] Mongoose models: `users`, `posts`, `categories`, `tags`
-- [ ] Password hashing + JWT auth (register / login / refresh)
-- [ ] Auth middleware + RBAC middleware
-- [ ] Standardized response envelope + global error handler
-- [ ] Posts CRUD + slug generation + draft→publish workflow
-- [ ] Listing: pagination, filtering, text search
-- [ ] Media (Cloudinary), comments, analytics endpoints
+- [x] Project setup, Express server, MongoDB Atlas connection
+- [x] Mongoose models: `users`, `posts`, `categories`, `tags`
+- [x] Password hashing + JWT auth (register / login / refresh)
+- [x] Auth middleware + RBAC middleware
+- [x] Standardized response envelope + global error handler
+- [x] Posts CRUD + slug generation + draft→publish workflow
+- [x] Listing: pagination, filtering, text search
+- [x] Media (Cloudinary), comments, analytics endpoints
 
 ### 🟩 Phase 2 — Frontend (make it usable)
 > *Everything the backend can do, now through a real UI.*
-- [ ] Admin Dashboard — auth, post editor, publish workflow, media upload
-- [ ] Category / tag management + analytics views
-- [ ] Public Site — published post listing + single-post pages (SEO slugs)
-- [ ] Shared JWT auth wired across both clients
+- [x] Admin Dashboard — auth, post editor, publish workflow, media upload
+- [x] Category / tag management + analytics views
+- [x] Public Site — published post listing + single-post pages (SEO slugs)
+- [x] Shared JWT auth wired across both clients
 
 ### 🟪 Phase 3 — GenAI (the differentiator)
 > *The RAG layer that makes this more than a CRUD app — built last, on top of real content.*
-- [ ] FastAPI service skeleton + Node proxy route
-- [ ] Ingest pipeline — chunk posts, generate embeddings, store vectors
-- [ ] Retrieval — embed query, fetch top-k relevant chunks
-- [ ] RAG end-to-end — retrieve → augment → generate grounded answers + sources
-- [ ] "AI Reports" dashboard UI
+- [x] FastAPI service skeleton + Node proxy route
+- [x] Ingest pipeline — chunk posts, generate embeddings, store vectors
+- [x] Retrieval — embed query, fetch top-k relevant chunks
+- [x] RAG end-to-end — retrieve → augment → generate grounded answers + sources
+- [x] "AI Reports" dashboard UI
 
 ### 🔌 Phase 4 — Cross-platform & polish
 - [ ] WordPress plugin consuming the public REST API
@@ -183,24 +183,45 @@ This project is built in three phases — **backend first, then frontend, then G
 git clone https://github.com/<you>/blogforge.git
 cd blogforge
 
-# Backend
-cd server && npm install && npm run dev
+# 1. Backend — the REST API (Node 20+)
+cd Backend && npm install
+cp .env.example .env          # MONGODB_URI, JWT secrets, Cloudinary keys
+npm run seed:admin            # creates the first admin from the ADMIN_* vars
+npm run dev
 
-# Frontend
-cd client && npm install && npm run dev
+# 2. AI service — the RAG microservice (Python 3.11+)
+cd ../ai-service && python -m venv .venv && .venv/Scripts/activate
+pip install -r requirements.txt
+cp .env.example .env          # same MONGODB_URI, matching AI_SERVICE_TOKEN, OPENAI_API_KEY
+python main.py
 
-# AI service
-cd ai-service && pip install -r requirements.txt && uvicorn main:app --reload
+# 3. Frontend — the SPA
+cd ../Frontend && npm install && npm run dev
+
+# Index existing posts for RAG (only needed once, for posts published
+# before the AI service was connected)
+cd ../Backend && npm run ai:reindex
 ```
 
-**Environment variables** (`.env`) — to be documented per service:
-`MONGODB_URI`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `CLOUDINARY_*`, `OPENAI_API_KEY` (or local embedding config).
+**Environment variables** — every service ships a tracked `.env.example`:
+
+| Service | Keys |
+|---|---|
+| `Backend/` | `MONGODB_URI`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `CLOUDINARY_*`, `AI_SERVICE_URL`, `AI_SERVICE_TOKEN` |
+| `ai-service/` | `MONGODB_URI` *(same DB)*, `AI_SERVICE_TOKEN` *(same value)*, `OPENAI_API_KEY`, `EMBEDDING_MODEL`, `CHAT_MODEL` |
+| `Frontend/` | none required — Vite proxies `/api` to the backend in dev |
+
+Leaving `AI_SERVICE_URL` empty disables the `/ai/*` routes; the rest of the API is
+unaffected. `OPENAI_API_KEY` can be swapped for `OPENAI_BASE_URL` pointed at a
+local OpenAI-compatible server (Ollama, LM Studio, vLLM) to run the AI layer
+entirely on your own machine. Full detail: [`ai-service/README.md`](ai-service/README.md).
 
 ---
 
 ## 📌 Project Status
 
-🚧 **In active development.** Built backend-first, frontend second, GenAI last — see the roadmap above.
+**Phases 1–3 are complete** — the API, both frontends, and the RAG layer are built and wired end to end.
+Phase 4 (WordPress plugin, AI suggestions in the editor, deployment) is what remains.
 
 ---
 
