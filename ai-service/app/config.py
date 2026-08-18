@@ -72,6 +72,15 @@ class Settings(BaseSettings):
     max_question_chars: int = 1_000
     max_history_turns: int = 6
 
+    # --- Guardrail: refuse off-topic questions before they cost a call ------
+    # Top-k always returns *something*, so "we got results" proves nothing. A
+    # question whose best chunk scores below this floor, and which uses none of
+    # the blog vocabulary in guardrails.py, is refused without calling the model.
+    # Both search paths report the same 0-1 scale, where 0.5 means unrelated.
+    # Every refusal logs the score it saw, so this is tunable from real traffic.
+    guardrail_enabled: bool = True
+    relevance_floor: float = 0.62
+
     @property
     def is_production(self) -> bool:
         return self.env == "production"

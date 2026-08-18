@@ -81,6 +81,8 @@ As built:
 - The service has no user model. Node resolves the caller's role into a `scope` block; `admin`/`editor` reports draw on the whole blog's analytics, an `author`'s on their own posts only — the same line `GET /analytics/overview` draws.
 - Only the Node API may reach the service, authenticated with the shared `AI_SERVICE_TOKEN`. There is no CORS on the FastAPI app, deliberately.
 - Capability 3 is exposed at `POST /ai/assist` (`summary`, `seo`, `topics`, `improve`). Surfacing it inside the post editor UI is Phase 4.
+- **Scope is enforced before generation, not only by the prompt.** `app/guardrails.py` refuses a question when its best retrieval score is below `RELEVANCE_FLOOR` *and* it uses no blog vocabulary — top-k always returns something, so "we retrieved results" proves nothing, while a real analytics question legitimately matches no chunk. A refused question never reaches the model or your invoice. Tune from the score logged on every refusal.
+- **Spend is bounded per user in two windows**: `AI_RATE_LIMIT_HOURLY` (30) caps a burst, `AI_RATE_LIMIT_DAILY` (100) caps the bill. Sign-up has its own limiter that counts successes, because each new account is a fresh AI budget.
 
 ## Environment Variables
 
