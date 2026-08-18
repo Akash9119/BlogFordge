@@ -48,28 +48,69 @@ React unchanged. Schemas live in `app/schemas.py`.
 ## How a report is produced
 
 ```
-question ──> embed ──> top-k chunks ─┐
-                                     ├──> prompt ──> LLM ──> answer + [n] citations
-analytics aggregations (RBAC-scoped) ┘
+question ──> embed ──> top-k chunks ──> GATE ─┐
+                                        │     ├──> prompt ──> LLM ──> answer + [n] citations
+                          off-topic ────┘     │
+                          (refused, no LLM)   │
+analytics aggregations (RBAC-scoped) ─────────┘
 ```
 
 1. **Retrieve** — the question is embedded and matched against chunks of the
    blog's published posts. Chunks are grouped back into posts before numbering,
    so a citation `[2]` always points at something a reader can open.
-2. **Augment** — retrieved excerpts are paired with a compact block of measured
+2. **Gate** — see [Guardrail](#guardrail). A question that is plainly not about
+   this blog is refused here, before generation costs anything.
+3. **Augment** — retrieved excerpts are paired with a compact block of measured
    facts from the same aggregations the analytics dashboard runs. "Summarise
    engagement trends" is not a retrieval question; no paragraph contains that
    answer, so the numbers have to come from the rollups.
-3. **Generate** — the system prompt allows exactly two sources of truth and makes
+4. **Generate** — the system prompt allows exactly two sources of truth and makes
    refusal the cheap option. If the context does not cover the question, saying
    so is the correct answer.
-4. **Cite** — citations are parsed out of the answer, uncited sources are
+5. **Cite** — citations are parsed out of the answer, uncited sources are
    dropped, and the rest are renumbered so `[n]` and the source list can never
    disagree.
 
 **Only published posts are indexed.** A draft is not something a grounded answer
 should quote, and it keeps the corpus equal to what every role may already read.
 Archiving, unpublishing, or deleting a post removes its vectors.
+
+## Guardrail
+
+AI Reports answers questions about *this blog*. "How do I make tea?" is not one,
+and the system prompt alone is a weak place to enforce that: a prompt can be
+argued with, and even when it wins you have paid for the completion that refused.
+
+So `app/guardrails.py` decides first, and for free. A question is refused when
+**both** of these hold:
+
+- its best retrieval score is below `RELEVANCE_FLOOR`, and
+- it contains none of the blog vocabulary (`post`, `views`, `traffic`, `drafts`,
+  `seo`, `comments`, …).
+
+Both conditions are needed because each alone is wrong. Top-k always returns
+*something* — ask about tea and you still get the six nearest chunks — so "we
+retrieved results" proves nothing, hence the floor. And a real analytics question
+("which post earned the most reads?") legitimately matches no chunk at all, since
+no paragraph contains that answer, hence the vocabulary escape hatch.
+
+A refused question costs one embedding and never reaches the model, the
+analytics aggregations, or your invoice.
+
+| Knob | Default | Effect |
+|---|---|---|
+| `GUARDRAIL_ENABLED` | `true` | `false` leaves only the system prompt |
+| `RELEVANCE_FLOOR` | `0.62` | 0–1, where `0.5` means unrelated. Raise to refuse more |
+
+**Tune it from real traffic, not from taste.** Every refusal logs the score it
+saw, so `grep 'refused off-topic' ` over a week of logs tells you whether the
+floor is set right for your corpus. It is deliberately permissive: a question
+that slips through costs one cheap call and still meets the system prompt, while
+a real question wrongly refused is a feature that looks broken.
+
+The prompt is still the second layer, and it now also treats retrieved excerpts
+as data rather than instructions — post content is author-written, so a post
+containing "ignore previous instructions" is quoted text, not a command.
 
 ## RBAC
 

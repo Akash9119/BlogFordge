@@ -28,6 +28,10 @@ class Retrieved:
     context: str = ""
     strategy: str = "none"
     chunk_count: int = 0
+    # Best score seen, before the context budget dropped anything — the
+    # guardrail asks "did anything here actually match", which is a question
+    # about the search, not about what survived the prompt budget.
+    top_score: float | None = None
 
     @property
     def is_empty(self) -> bool:
@@ -45,6 +49,7 @@ async def retrieve(question: str, top_k: int | None = None) -> Retrieved:
     if not matches:
         return Retrieved(strategy=strategy)
 
+    top_score = max(m.score for m in matches)
     grouped = _group_by_post(matches)
     sources, blocks, used_chars, chunk_count = [], [], 0, 0
 
@@ -74,12 +79,19 @@ async def retrieve(question: str, top_k: int | None = None) -> Retrieved:
             )
         )
 
-    log.info("retrieved %d chunks across %d posts via %s", chunk_count, len(sources), strategy)
+    log.info(
+        "retrieved %d chunks across %d posts via %s (top score %.3f)",
+        chunk_count,
+        len(sources),
+        strategy,
+        top_score,
+    )
     return Retrieved(
         sources=sources,
         context="\n\n---\n\n".join(blocks),
         strategy=strategy,
         chunk_count=chunk_count,
+        top_score=top_score,
     )
 
 

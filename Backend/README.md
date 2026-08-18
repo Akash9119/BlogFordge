@@ -96,8 +96,14 @@ completely unaffected.
 - **`embeddings` is owned by the AI service.** Node declares the model only to
   cascade a post deletion and to count the corpus — both must keep working when
   that service is offline.
-- **AI calls are budgeted separately**: 30 per user per hour, keyed by user id
-  rather than IP, because they are the only endpoints that cost money per call.
+- **AI calls are budgeted separately**: `AI_RATE_LIMIT_HOURLY` (30) caps a burst
+  and `AI_RATE_LIMIT_DAILY` (100) caps the bill — 30/hour is 720/day if someone
+  is patient. Both are keyed by user id rather than IP, because these are the
+  only endpoints that cost money per call.
+- **Sign-up has its own limiter** (5/hour/IP) and it *counts successes*, unlike
+  the login limiter. A successful registration is exactly what an abuser wants
+  to repeat: every new account is an author with a fresh AI budget, so uncounted
+  sign-ups would turn the per-user AI limit into no limit at all.
 
 ## Production notes
 
