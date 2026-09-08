@@ -45,7 +45,16 @@ module.exports = {
   nodeEnv,
   isProduction,
   port: Number.parseInt(process.env.PORT, 10) || 5000,
-  trustProxy: process.env.TRUST_PROXY === '1' || process.env.TRUST_PROXY === 'true',
+  /**
+   * Hop count, not a boolean. Behind exactly one reverse proxy (Caddy on the
+   * production VM) `TRUST_PROXY=1` makes Express read the *last* entry of
+   * X-Forwarded-For — the address Caddy actually saw. A blanket `true` trusts
+   * the whole header, which lets any client forge the chain and mint a fresh
+   * identity for every request, defeating the per-IP rate limits.
+   */
+  trustProxy: /^\d+$/.test(process.env.TRUST_PROXY || '')
+    ? Number.parseInt(process.env.TRUST_PROXY, 10)
+    : process.env.TRUST_PROXY === 'true',
   corsOrigins: (process.env.CORS_ORIGINS || '')
     .split(',')
     .map((origin) => origin.trim())

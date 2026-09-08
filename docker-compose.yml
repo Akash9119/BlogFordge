@@ -1,0 +1,101 @@
+# BlogForge — production stack for a single Oracle Cloud compute instance.
+#
+#   docker compose up -d --build
+#
+# Three containers, one published surface. `web` (Caddy) is the only thing bound
+# to a host port; `api` and `ai` talk over the private bridge network and are
+# unreachable from the internet even if the VM firewall were wide open. That
+# preserves the architecture's core rule — the Node API is the single auth
+# boundary, and the AI service is never public-facing.
+#
+# Secrets stay where they already live: Backend/.env and ai-service/.env are
+# read straight off the host, never baked into an image. The `environment`
+# blocks below override only the handful of values that must differ in
+# production (bind addresses, service URLs, NODE_ENV).
+
+name: blogforge
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  api:
+    build:
+      context: ./Backend
+    image: blogforge-api:latest
+    restart: unless-stopped
+    env_file:
+      - ./Backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: "5050"
+      # Caddy is exactly one hop in front, so trust exactly one hop. Anything
+      # more permissive lets a client spoof X-Forwarded-For and walk past the
+      # per-IP rate limits.
+      TRUST_PROXY: "1"
+      # Same-origin through Caddy means CORS is not normally exercised; this is
+      # the allowlist for anything served from a *different* origin later (the
+      # Phase 4 WordPress plugin, say).
+      CORS_ORIGINS: ${PUBLIC_ORIGIN}
+      # Container DNS name, not localhost — the AI service is its own host now.
+      AI_SERVICE_URL: http://ai:8010
+    depends_on:
+      ai:
+        condition: service_started
+    networks: [blogforge]
+    logging: *default-logging
+
+  ai:
+    build:
+      context: ./ai-service
+    image: blogforge-ai:latest
+    restart: unless-stopped
+    env_file:
+      - ./ai-service/.env
+    environment:
+      ENV: production
+      # 0.0.0.0 is safe precisely because no `ports:` key exists here: the
+      # listener is reachable only from the blogforge network.
+      AI_HOST: 0.0.0.0
+      AI_PORT: "8010"
+    # Deliberately no `ports:` — do not add one.
+    networks: [blogforge]
+    logging: *default-logging
+
+  web:
+    build:
+      context: ./Frontend
+      args:
+        # Empty → the SPA uses the relative /api/v1 that Caddy proxies below.
+        VITE_API_URL: ""
+    image: blogforge-web:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"   # HTTP/3
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # Certificates and ACME account keys. Losing this volume means re-issuing
+      # from Let's Encrypt, which is rate-limited — keep it.
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [blogforge]
+    logging: *default-logging
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  blogforge:
+    driver: bridge

@@ -1,0 +1,59 @@
+# BlogForge edge.
+#
+# SITE_ADDRESS decides everything about TLS:
+#   blog.example.com   → Caddy gets a Let's Encrypt certificate automatically
+#   :80                → plain HTTP, for an IP-only deployment with no domain
+# Set it in deploy/.env. Nothing else in this file changes between the two.
+
+{
+	email {$ACME_EMAIL:noreply@example.com}
+	# Behind OCI's plain VM there is no upstream load balancer, so Caddy is the
+	# first hop and sees the real client IP.
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+{$SITE_ADDRESS} {
+	encode zstd gzip
+
+	# --- API ---------------------------------------------------------------
+	# Same origin as the SPA, so no CORS preflight and no cross-site cookie
+	# rules to fight. The Node container is not published to the host; this
+	# proxy is the only route to it.
+	handle /api/* {
+		reverse_proxy api:5050
+	}
+
+	handle /health {
+		reverse_proxy api:5050
+	}
+
+	# --- SPA ---------------------------------------------------------------
+	handle {
+		root * /srv
+
+		# Fingerprinted assets are immutable; index.html must never be cached,
+		# or a deploy leaves browsers pinned to the previous bundle.
+		@immutable path /assets/*
+		header @immutable Cache-Control "public, max-age=31536000, immutable"
+		header /index.html Cache-Control "no-cache"
+
+		# React Router owns the URL space: unknown paths return index.html so a
+		# deep link or a refresh renders the app instead of a 404.
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}

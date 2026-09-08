@@ -1,0 +1,14 @@
+# The deployment scripts run on Linux. A CRLF line ending in a shell script
+# makes the kernel look for an interpreter named "bash\r", which fails as
+# `/usr/bin/env: 'bash\r': No such file or directory` — a confusing error for
+# a file that looks perfectly fine in an editor. Pin these to LF so it cannot
+# happen no matter what a contributor's core.autocrlf is set to.
+*.sh          text eol=lf
+Dockerfile    text eol=lf
+*.dockerignore text eol=lf
+Caddyfile     text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+
+# Let git decide for everything else.
+* text=auto
