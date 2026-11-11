@@ -2,6 +2,8 @@ import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { categoriesApi, tagsApi } from '@/api/taxonomy'
 import { usersApi } from '@/api/users'
+import { postsApi } from '@/api/posts'
+import { useDocumentTitle } from '@/lib/useDocumentTitle'
 import { useAuth } from '@/context/auth-context'
 import { isAdmin } from '@/lib/permissions'
 import { Avatar } from '@/components/ui/Avatar'
@@ -17,6 +19,7 @@ export function CategoryArchivePage() {
     queryFn: () => categoriesApi.get(slug),
     retry: false,
   })
+  useDocumentTitle(term.data?.name ?? slug)
 
   return (
     <PostIndex
@@ -41,6 +44,7 @@ export function TagArchivePage() {
     queryFn: () => tagsApi.get(slug),
     retry: false,
   })
+  useDocumentTitle(term.data ? `#${term.data.name}` : slug)
 
   return (
     <PostIndex
@@ -72,7 +76,18 @@ export function AuthorPage() {
     retry: false,
   })
 
-  const name = profile.data?.name ?? (user?._id === id ? user.name : undefined)
+  // `GET /users/:id` is admin-only; everyone else learns the name from the
+  // author's latest post (posts carry a populated author).
+  const latest = useQuery({
+    queryKey: ['posts', 'reader', 'author-name', id],
+    queryFn: ({ signal }) => postsApi.list({ author: id, limit: 1, status: 'published' }, signal),
+    enabled: !isAdmin(user) && user?._id !== id,
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const name =
+    profile.data?.name ?? (user?._id === id ? user.name : undefined) ?? latest.data?.items[0]?.author?.name
+  useDocumentTitle(name)
 
   return (
     <PostIndex
@@ -103,6 +118,7 @@ function TermDirectory({ kind }: { kind: 'categories' | 'tags' }) {
   })
 
   const isCategory = kind === 'categories'
+  useDocumentTitle(isCategory ? 'Categories' : 'Tags')
 
   return (
     <div className={styles.container}>

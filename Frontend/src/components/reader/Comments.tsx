@@ -70,8 +70,8 @@ function Composer({ postId, parent = null, onDone, autoFocus, placeholder }: Com
         maxLength={MAX_LENGTH}
         rows={parent ? 3 : 4}
         autoFocus={autoFocus}
-        placeholder={placeholder ?? 'Add your comment'}
-        aria-label={parent ? 'Write a reply' : 'Write a comment'}
+        placeholder={placeholder ?? 'Dear editor…'}
+        aria-label={parent ? 'Write a reply' : 'Write a letter'}
         aria-invalid={error ? true : undefined}
         style={{
           width: '100%',
@@ -88,7 +88,7 @@ function Composer({ postId, parent = null, onDone, autoFocus, placeholder }: Com
 
       <div className={styles.composerActions}>
         <p className={styles.composerNote} style={error ? { color: 'var(--danger-strong)' } : undefined}>
-          {error ?? (staff ? 'Your comment appears immediately.' : 'Comments are reviewed before they appear.')}
+          {error ?? (staff ? 'Your letter appears immediately.' : 'Letters are read by an editor before they appear.')}
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
           {parent && (
@@ -97,7 +97,7 @@ function Composer({ postId, parent = null, onDone, autoFocus, placeholder }: Com
             </Button>
           )}
           <Button type="submit" variant="primary" size="sm" loading={submit.isPending}>
-            {parent ? 'Post reply' : 'Post comment'}
+            {parent ? 'Post reply' : 'Send letter'}
           </Button>
         </div>
       </div>
@@ -121,7 +121,7 @@ function CommentItem({ comment, postId, depth }: CommentItemProps) {
   const remove = useMutation({
     mutationFn: () => commentsApi.remove(comment._id),
     onSuccess: () => {
-      toast.success('Comment deleted.')
+      toast.success('Letter deleted.')
       setConfirmingDelete(false)
       queryClient.invalidateQueries({ queryKey: ['comments', postId] })
     },
@@ -166,7 +166,7 @@ function CommentItem({ comment, postId, depth }: CommentItemProps) {
             postId={postId}
             parent={comment._id}
             autoFocus
-            placeholder={`Reply to ${comment.author?.name ?? 'this comment'}`}
+            placeholder={`Reply to ${comment.author?.name ?? 'this letter'}`}
             onDone={() => setReplying(false)}
           />
         </div>
@@ -184,8 +184,8 @@ function CommentItem({ comment, postId, depth }: CommentItemProps) {
         open={confirmingDelete}
         onClose={() => setConfirmingDelete(false)}
         onConfirm={() => remove.mutate()}
-        title="Delete this comment?"
-        confirmLabel="Delete comment"
+        title="Delete this letter?"
+        confirmLabel="Delete letter"
         loading={remove.isPending}
         // Backend detaches replies rather than cascading — say so plainly.
         consequence={
@@ -212,7 +212,7 @@ export function Comments({ postId, canComment }: { postId: string; canComment: b
     <section className={styles.section} aria-labelledby="comments-heading">
       <header className={styles.head}>
         <h2 className={styles.title} id="comments-heading">
-          Comments
+          Letters
         </h2>
         {comments.data && <span className={styles.count}>{comments.data.meta.total} total</span>}
       </header>
@@ -221,7 +221,7 @@ export function Comments({ postId, canComment }: { postId: string; canComment: b
         <Composer postId={postId} />
       ) : (
         <div className={styles.signInPrompt}>
-          <span>Sign in to join the conversation.</span>
+          <span>Sign in to write a letter.</span>
           <LinkButton to="/login" variant="secondary" size="sm">
             Sign in
           </LinkButton>
@@ -243,8 +243,8 @@ export function Comments({ postId, canComment }: { postId: string; canComment: b
       ) : nested.length === 0 ? (
         <EmptyState
           icon="comment"
-          title="No comments yet."
-          body={canComment ? 'Be the first to say something.' : undefined}
+          title="No letters yet."
+          body={canComment ? 'Be the first to write in.' : undefined}
           inset
         />
       ) : (

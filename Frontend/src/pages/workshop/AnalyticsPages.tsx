@@ -115,7 +115,7 @@ export function AnalyticsPage() {
             )}
           </Table>
 
-          {posts.data && <Pagination meta={posts.data.meta} onPageChange={setPage} noun="post" />}
+          {posts.data && <Pagination meta={posts.data.meta} onPageChange={setPage} noun="post" busy={posts.isPlaceholderData} />}
         </>
       )}
     </>

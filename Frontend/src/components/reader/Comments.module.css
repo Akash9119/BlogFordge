@@ -1,87 +1,96 @@
+/* "Letters" — comments set like a magazine's letters page. */
 .section {
-  max-width: var(--reading-measure);
-  margin: var(--space-8) auto 0;
+  margin-top: var(--space-9);
   padding-top: var(--space-6);
-  border-top: 1px solid var(--filing);
+  border-top: 1px solid var(--anvil);
 }
 
 .head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-4);
-  margin-bottom: var(--space-5);
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: var(--text-h2);
-  line-height: var(--text-h2-lh);
-  font-weight: 600;
-  color: var(--anvil);
+  font-weight: 340;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
 .count {
   font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--steel);
-  font-variant-numeric: tabular-nums;
+  font-size: var(--text-small);
+  color: var(--ember-strong);
 }
 
-/* ── Composer ────────────────────────────────────────────────────────── */
 .composer {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-4);
-  /* The post page is --surface, so inset panels step down to --paper. */
-  background: var(--paper);
-  border: 1px solid var(--filing);
-  border-radius: var(--radius-card);
-  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-6);
+}
+
+.composer textarea {
+  border: 0 !important;
+  border-bottom: 1px solid var(--slate) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: var(--space-2) 0 !important;
+  font-family: var(--font-reading) !important;
+  font-style: italic;
+  font-size: 1.25rem !important;
+  line-height: 1.6 !important;
+  box-shadow: none !important;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.composer textarea:focus {
+  outline: none;
+  border-bottom-color: var(--ember) !important;
 }
 
 .composerActions {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
 }
 
 .composerNote {
-  font-size: var(--text-small);
-  line-height: var(--text-small-lh);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
   color: var(--steel);
 }
 
 .signInPrompt {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   gap: var(--space-4);
   flex-wrap: wrap;
-  padding: var(--space-4);
-  border: 1px solid var(--filing);
-  border-radius: var(--radius-card);
-  background: var(--paper);
-  margin-bottom: var(--space-6);
-  font-size: var(--text-small);
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--filing);
+  border-bottom: 1px solid var(--filing);
+  margin-bottom: var(--space-5);
+  font-family: var(--font-reading);
+  font-style: italic;
+  font-size: 1.125rem;
   color: var(--slate);
 }
 
-/* ── Thread ──────────────────────────────────────────────────────────── */
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
 }
 
 .comment {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--filing);
+  animation: letter-in 700ms var(--ease-out-expo) both;
 }
 
 .commentHead {
@@ -92,7 +101,6 @@
 }
 
 .commentAuthor {
-  font-size: var(--text-small);
   font-weight: 600;
   color: var(--anvil);
 }
@@ -100,53 +108,59 @@
 .commentTime {
   font-family: var(--font-mono);
   font-size: var(--text-label);
-  letter-spacing: 0.04em;
   color: var(--steel);
 }
 
 .commentBody {
-  font-size: var(--text-body);
-  line-height: 1.65;
-  color: var(--slate);
+  margin-top: var(--space-2);
+  font-family: var(--font-reading);
+  font-size: 1.1875rem;
+  line-height: 1.6;
+  color: var(--iron);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .commentActions {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-1);
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  margin-left: calc(var(--space-4) * -1);
 }
 
-/* Replies indent behind a hairline rather than a nested card. */
 .replies {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  margin-top: var(--space-4);
-  margin-left: var(--space-4);
-  padding-left: var(--space-4);
-  border-left: 1px solid var(--filing);
+  margin-top: var(--space-3);
+  padding-left: var(--space-6);
+  border-left: 1px solid var(--ember);
 }
 
-/* The author's own comment, still waiting on a moderator. */
+.replies .comment:first-child {
+  border-top: 0;
+}
+
 .pendingOwn {
-  padding: var(--space-3) var(--space-4);
-  border: 1px dashed var(--pending);
-  border-radius: var(--radius-card);
-  background: var(--pending-tint);
+  opacity: 0.7;
 }
 
 .replyForm {
   margin-top: var(--space-3);
-  padding-left: var(--space-4);
-  border-left: 1px solid var(--filing);
+  padding-left: var(--space-6);
+}
+
+@keyframes letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (max-width: 640px) {
-  .replies {
-    margin-left: 0;
-    padding-left: var(--space-3);
+  .replies,
+  .replyForm {
+    padding-left: var(--space-4);
   }
 }

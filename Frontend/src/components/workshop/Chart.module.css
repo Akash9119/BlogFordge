@@ -245,3 +245,144 @@
   line-height: var(--text-small-lh);
   color: var(--steel);
 }
+
+/* ── Editorial pass: ink line that draws itself, ember marks ─────────── */
+.line {
+  stroke: var(--anvil);
+  stroke-width: 1.75;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-stroke 1.8s var(--ease-expo) 0.15s forwards;
+}
+
+.area {
+  fill: var(--ember);
+  opacity: 0;
+  animation: area-in 1s var(--ease) 1.1s forwards;
+}
+
+@keyframes area-in {
+  to {
+    opacity: 0.07;
+  }
+}
+
+.endDot,
+.hoverDot {
+  fill: var(--ember);
+  stroke: var(--paper);
+}
+
+.endDot {
+  opacity: 0;
+  animation: fade-in 400ms var(--ease) 1.6s forwards;
+}
+
+.tooltipKey {
+  background: var(--ember);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.toggle {
+  color: var(--anvil);
+  text-decoration: underline;
+  text-decoration-color: var(--ember);
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    stroke-dashoffset: 0;
+  }
+  .area {
+    opacity: 0.07;
+  }
+  .endDot {
+    opacity: 1;
+  }
+}
+
+/* Editorial stat row: big Fraunces figures divided by hairlines, no boxes. */
+.tiles {
+  gap: 0;
+  padding: var(--space-5) 0;
+  border-top: 1px solid var(--anvil);
+  border-bottom: 1px solid var(--filing);
+  margin-bottom: var(--space-7);
+}
+
+.tile {
+  padding: var(--space-2) var(--space-5);
+  background: none;
+  border: 0;
+  border-left: 1px solid var(--filing);
+  border-radius: 0;
+  transition: transform 500ms var(--ease-out-expo);
+}
+
+.tile:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+}
+
+.tileLabel {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+}
+
+.tileLabel svg {
+  color: var(--ember);
+}
+
+.tileValue {
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: clamp(2.75rem, 4.4vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.tileFoot {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+}
+
+@media (max-width: 640px) {
+  .tile {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--filing);
+    padding-top: var(--space-4);
+  }
+  .tile:first-child {
+    border-top: 0;
+  }
+}
+
+/* Local copy: CSS Modules scope keyframe names, so the global one is unreachable. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes draw-stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

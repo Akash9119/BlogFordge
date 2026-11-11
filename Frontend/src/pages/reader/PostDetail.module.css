@@ -1,190 +1,281 @@
-/* §2: the reading column sits on --surface, not on the app's cool paper.
-   The page goes full-bleed white so long-form reading has its own ground. */
 .page {
-  background: var(--surface);
-  border-bottom: 1px solid var(--filing);
-  width: 100%;
+  padding-bottom: var(--space-8);
 }
 
 .inner {
   max-width: var(--reader-max);
   margin: 0 auto;
-  padding: var(--space-6) var(--space-5) var(--space-8);
+  padding: 0 var(--gutter);
+}
+
+/* Reading progress: an ember hairline under the sticky header. */
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 2px;
+  background: var(--ember);
+  transform-origin: left;
+  transform: scaleX(var(--progress));
 }
 
 .back {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-small);
-  color: var(--steel);
-  text-decoration: none;
-  margin-bottom: var(--space-6);
-}
-
-.back:hover {
-  color: var(--iron);
-}
-
-/* The reading column: everything long-form sits inside 72ch. */
-.column {
-  max-width: var(--reading-measure);
-  margin: 0 auto;
-}
-
-.header {
-  margin-bottom: var(--space-6);
-}
-
-.kickerRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-3);
-}
-
-.title {
-  font-family: var(--font-display);
-  font-size: var(--text-display-l);
-  line-height: var(--text-display-l-lh);
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  color: var(--anvil);
-}
-
-.excerpt {
-  margin-top: var(--space-4);
-  font-family: var(--font-reading);
-  font-size: var(--text-reading);
-  line-height: var(--text-reading-lh);
+  min-height: 44px;
+  margin-top: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
   color: var(--slate);
 }
 
-/* Byline strip: author on the left, mono instrumentation on the right. */
-.byline {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  flex-wrap: wrap;
-  margin-top: var(--space-5);
-  padding: var(--space-4) 0;
-  border-top: 1px solid var(--filing);
-  border-bottom: 1px solid var(--filing);
-}
-
-.authorBlock {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
-.authorName {
-  font-size: var(--text-small);
-  font-weight: 600;
-  color: var(--anvil);
-  text-decoration: none;
-}
-
-.authorName:hover {
-  color: var(--quench-strong);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.authorRole {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--steel);
-}
-
-.stats {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--steel);
-  font-variant-numeric: tabular-nums;
-}
-
-.stat {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.cover {
-  width: 100%;
-  max-width: var(--reader-max);
-  margin: 0 auto var(--space-7);
-  border-radius: var(--radius-card);
-  border: 1px solid var(--filing);
-  aspect-ratio: 21 / 9;
-  object-fit: cover;
-  background: var(--mist);
-}
-
-/* Owner/staff viewing an unpublished post. */
 .draftNotice {
   display: flex;
-  align-items: flex-start;
   gap: var(--space-3);
-  max-width: var(--reading-measure);
-  margin: 0 auto var(--space-6);
+  align-items: flex-start;
+  margin-top: var(--space-4);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-control);
+  border-left: 2px solid var(--ember);
   background: var(--ember-tint);
-  color: var(--ember-strong);
+  color: var(--iron);
   font-size: var(--text-small);
-  line-height: var(--text-small-lh);
 }
 
 .draftNoticeIcon {
   flex-shrink: 0;
   margin-top: 2px;
+  color: var(--ember-strong);
+}
+
+/* ── Header: meta column + giant title ───────────────────────────────── */
+.header {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-5);
+  padding: var(--space-8) 0 var(--space-8);
+}
+
+.metaCol {
+  grid-column: 1 / span 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  animation: fade-in 800ms var(--ease) 300ms both;
+}
+
+.stat {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
+  font-variant-numeric: tabular-nums;
+}
+
+.title {
+  grid-column: 4 / span 9;
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: clamp(2.75rem, 6.6vw, 6.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.excerpt {
+  grid-column: 4 / span 6;
+  font-family: var(--font-reading);
+  font-style: italic;
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--slate);
+  animation: fade-in 900ms var(--ease) 600ms both;
+}
+
+.byline {
+  grid-column: 10 / span 3;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  animation: fade-in 900ms var(--ease) 750ms both;
+}
+
+.authorBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.wordsBy {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.authorName {
+  font-weight: 500;
+  font-size: 1.0625rem;
+  color: var(--anvil);
+}
+
+.authorRole {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
+  text-transform: capitalize;
+}
+
+/* ── Cover: near full-bleed, wipes in ────────────────────────────────── */
+.coverFigure {
+  padding: 0 var(--gutter);
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.cover {
+  height: clamp(320px, 70vh, 760px);
+  overflow: hidden;
+}
+
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Body: margin column + reading column ────────────────────────────── */
+.body {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-5);
+  padding-top: var(--space-9);
+}
+
+.margin {
+  grid-column: 1 / span 3;
+}
+
+.toc {
+  position: sticky;
+  top: 112px;
+  display: flex;
+  flex-direction: column;
+}
+
+.marginLabel {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.tocLink {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  font-size: var(--text-small);
+  line-height: 1.4;
+  color: var(--slate);
+  text-decoration: none;
+  transition:
+    color var(--dur) var(--ease),
+    transform 500ms var(--ease-expo);
+}
+
+.tocLink:hover {
+  color: var(--anvil);
+  transform: translateX(4px);
+}
+
+.tocNumber {
+  flex-shrink: 0;
+  min-width: 2.2em;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--ember-strong);
+}
+
+.column {
+  grid-column: 4 / span 7;
+  min-width: 0;
+  max-width: var(--reading-measure);
+}
+
+/* Anchored headings clear the sticky header. */
+.column h2[id] {
+  scroll-margin-top: 104px;
 }
 
 .taxonomy {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
-  flex-wrap: wrap;
-  margin-top: var(--space-7);
+  margin-top: var(--space-8);
   padding-top: var(--space-5);
   border-top: 1px solid var(--filing);
 }
 
 .taxonomyLabel {
+  margin-right: var(--space-2);
   font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--steel);
-  margin-right: var(--space-1);
 }
 
-@media (max-width: 640px) {
-  .inner {
-    padding: var(--space-5) var(--space-4) var(--space-7);
+/* Kept for the loading skeleton. */
+.kickerRow,
+.stats {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+@media (max-width: 960px) {
+  .metaCol,
+  .title,
+  .excerpt,
+  .byline,
+  .margin,
+  .column {
+    grid-column: 1 / -1;
   }
-  .title {
-    font-size: var(--text-h1);
-    line-height: var(--text-h1-lh);
-  }
-  .cover {
-    aspect-ratio: 16 / 9;
+  .metaCol {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding-top: 0;
   }
   .byline {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: var(--space-3);
+    justify-content: flex-start;
+  }
+  .margin {
+    display: none;
+  }
+  .header {
+    padding-top: var(--space-6);
+  }
+  .body {
+    padding-top: var(--space-7);
+  }
+}
+
+/* Local copy: CSS Modules scope keyframe names, so the global one is unreachable. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

@@ -1,6 +1,21 @@
+import { Children, isValidElement, type ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { headingId } from '@/lib/outline'
 import styles from './Prose.module.css'
+
+/** Plain text of rendered markdown children — used to derive heading ids. */
+function textOf(node: ReactNode): string {
+  return Children.toArray(node)
+    .map((child) =>
+      typeof child === 'string' || typeof child === 'number'
+        ? String(child)
+        : isValidElement<{ children?: ReactNode }>(child)
+          ? textOf(child.props.children)
+          : '',
+    )
+    .join('')
+}
 
 /**
  * Renders post content. Markdown is the authoring format (the API stores
@@ -16,6 +31,8 @@ export function Prose({ content, compact }: { content: string; compact?: boolean
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
+          // Full articles get anchorable h2s for the contents list.
+          h2: ({ children }) => <h2 id={compact ? undefined : headingId(textOf(children))}>{children}</h2>,
           // Wide tables scroll inside their own container — §13.
           table: ({ children }) => (
             <div className={styles.tableWrap}>

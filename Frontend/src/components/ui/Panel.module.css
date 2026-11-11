@@ -111,3 +111,12 @@
     overflow-x: auto;
   }
 }
+
+/* Editorial pass: titles in Fraunces. */
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: 1.375rem;
+  line-height: 1.2;
+}

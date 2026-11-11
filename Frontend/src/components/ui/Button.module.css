@@ -1,4 +1,11 @@
+/*
+ * Buttons — ink blocks. On hover an ember fill sweeps in from the left
+ * (the ::before layer), so the motion reads as "struck", not "glowing".
+ */
 .button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -7,66 +14,89 @@
   border: 1px solid transparent;
   font-family: var(--font-ui);
   font-weight: 500;
+  letter-spacing: 0.005em;
   white-space: nowrap;
   text-decoration: none;
   transition:
-    background-color var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease);
+    color 350ms var(--ease),
+    border-color 350ms var(--ease),
+    background-color var(--dur) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: translateX(-101%);
+  transition: transform 520ms var(--ease-expo);
+}
+
+.button:hover:not(:disabled)::before {
+  transform: none;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .button:disabled,
 .button[aria-disabled='true'] {
   cursor: not-allowed;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-/* ── Sizes — md keeps the 44px touch target from §13 ─────────────────── */
+/* ── Sizes — md keeps the 44px touch target ──────────────────────────── */
 .sm {
-  min-height: 32px;
-  padding: 0 var(--space-3);
+  min-height: 36px;
+  padding: 0 var(--space-4);
   font-size: var(--text-small);
 }
 
 .md {
   min-height: 44px;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-5);
   font-size: var(--text-body);
 }
 
 .lg {
-  min-height: 48px;
-  padding: 0 var(--space-5);
+  min-height: 52px;
+  padding: 0 var(--space-6);
   font-size: var(--text-body);
-  font-weight: 600;
 }
 
 /* ── Variants ────────────────────────────────────────────────────────── */
 
-/* The scarce accent: one primary per screen. */
+/* Ink block → ember. One primary per screen. */
 .primary {
+  background: var(--anvil);
+  border-color: var(--anvil);
+  color: var(--on-ink);
+}
+
+.primary::before {
   background: var(--ember-btn);
-  color: #fff;
-  font-weight: 600;
 }
 
 .primary:hover:not(:disabled) {
-  background: var(--ember-strong);
+  border-color: var(--ember-btn);
+  color: #fff;
 }
 
-.primary:active:not(:disabled) {
-  background: var(--ember-strong);
-}
-
+/* Outline → fills with ink. */
 .secondary {
-  background: var(--surface);
-  border-color: var(--filing);
-  color: var(--iron);
+  background: transparent;
+  border-color: var(--anvil);
+  color: var(--anvil);
+}
+
+.secondary::before {
+  background: var(--anvil);
 }
 
 .secondary:hover:not(:disabled) {
-  background: var(--mist);
-  border-color: var(--steel-soft);
+  color: var(--on-ink);
 }
 
 .ghost {
@@ -74,19 +104,27 @@
   color: var(--slate);
 }
 
-.ghost:hover:not(:disabled) {
+.ghost::before {
   background: var(--mist);
-  color: var(--iron);
+}
+
+.ghost:hover:not(:disabled) {
+  color: var(--anvil);
 }
 
 .danger {
   background: var(--danger);
+  border-color: var(--danger);
   color: #fff;
-  font-weight: 600;
+}
+
+.danger::before {
+  background: var(--anvil);
 }
 
 .danger:hover:not(:disabled) {
-  background: var(--danger-strong);
+  border-color: var(--anvil);
+  color: var(--on-ink);
 }
 
 /* Quiet destructive action inside tables and menus. */
@@ -95,7 +133,7 @@
   color: var(--danger-strong);
 }
 
-.dangerGhost:hover:not(:disabled) {
+.dangerGhost::before {
   background: var(--danger-tint);
 }
 
@@ -107,7 +145,7 @@
 .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid currentColor;
+  border: 1.5px solid currentColor;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spin 700ms linear infinite;

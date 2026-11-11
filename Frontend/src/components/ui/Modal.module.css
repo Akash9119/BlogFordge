@@ -92,7 +92,7 @@
   padding: var(--space-3);
   border-radius: var(--radius-control);
   background: var(--pending-tint);
-  color: #6f460d;
+  color: var(--pending-strong);
   font-size: var(--text-small);
   line-height: var(--text-small-lh);
 }
@@ -132,4 +132,13 @@
   .footer > * {
     width: 100%;
   }
+}
+
+/* Editorial pass: titles in Fraunces. */
+.title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: 1.375rem;
+  line-height: 1.2;
 }

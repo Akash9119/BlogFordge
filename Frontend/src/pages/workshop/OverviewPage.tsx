@@ -12,6 +12,10 @@ import { Cell, PrimaryCell, Table } from '@/components/ui/Table'
 import { EmptyState, ErrorState, Skeleton } from '@/components/ui/States'
 import { Icon } from '@/components/ui/Icon'
 
+function plural(count: number, one: string, many: string) {
+  return `${formatCount(count)} ${count === 1 ? one : many}`
+}
+
 const RANGES = [
   { value: '7', label: 'Last 7 days' },
   { value: '30', label: 'Last 30 days' },
@@ -37,8 +41,16 @@ export function OverviewPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Workshop"
+        eyebrow={`Welcome back, ${user?.name?.split(' ')[0] ?? 'there'}`}
         title={`Welcome back, ${user?.name?.split(' ')[0] ?? 'there'}`}
+        heading={
+          data ? (
+            <>
+              {plural(byStatus.draft ?? 0, 'draft', 'drafts')} on the anvil,{' '}
+              <span className="wonk">{formatCount(byStatus.published ?? 0)} published.</span>
+            </>
+          ) : undefined
+        }
         subtitle="How the forge is running: what's published, what's still hot, and what readers are actually reading."
         documentTitle="Overview"
       />

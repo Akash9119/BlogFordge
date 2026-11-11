@@ -123,6 +123,11 @@ async function toEnvelope<T>(response: Response): Promise<Envelope<T>> {
   const payload = await response.json().catch(() => null)
 
   if (!response.ok || !payload?.success) {
+    // A gateway error with no API envelope means the API itself is down or
+    // unreachable (e.g. the dev proxy can't reach it) — say so, not "our end".
+    if (!payload && [502, 503, 504].includes(response.status)) {
+      throw new ApiError(0, NETWORK_ERROR_COPY)
+    }
     const masked = response.status >= 500
     throw new ApiError(
       response.status,

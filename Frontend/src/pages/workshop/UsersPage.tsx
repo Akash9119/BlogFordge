@@ -200,7 +200,7 @@ export function UsersPage() {
             )}
           </Table>
 
-          {users.data && <Pagination meta={users.data.meta} onPageChange={setPage} noun="member" />}
+          {users.data && <Pagination meta={users.data.meta} onPageChange={setPage} noun="member" busy={users.isPlaceholderData} />}
         </>
       )}
 

@@ -23,6 +23,7 @@ import { MediaPicker } from '@/components/workshop/MediaBrowser'
 import styles from './PostEditor.module.css'
 
 const IGNITE_MS = 180
+const STAMP_MS = 2200
 
 interface Draft {
   title: string
@@ -87,6 +88,9 @@ export function PostEditorPage() {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [igniting, setIgniting] = useState(false)
   const igniteTimer = useRef<number | undefined>(undefined)
+  // The rubber stamp that lands on a successful publish.
+  const [stamped, setStamped] = useState(false)
+  const stampTimer = useRef<number | undefined>(undefined)
 
   const post = useQuery({
     queryKey: ['post', 'edit', id],
@@ -116,7 +120,13 @@ export function PostEditorPage() {
     setDirty(false)
   }, [post.data])
 
-  useEffect(() => () => window.clearTimeout(igniteTimer.current), [])
+  useEffect(
+    () => () => {
+      window.clearTimeout(igniteTimer.current)
+      window.clearTimeout(stampTimer.current)
+    },
+    [],
+  )
 
   // Don't let a reload or a stray back-navigation eat unsaved work.
   useEffect(() => {
@@ -177,6 +187,9 @@ export function PostEditorPage() {
       setDirty(false)
       toast.success('Post published.')
       invalidate()
+      setStamped(true)
+      window.clearTimeout(stampTimer.current)
+      stampTimer.current = window.setTimeout(() => setStamped(false), STAMP_MS)
     },
     onError: (error: unknown) => {
       capture(error)
@@ -243,6 +256,17 @@ export function PostEditorPage() {
 
   return (
     <>
+      {/* Decorative — the toast announces the publish to assistive tech. */}
+      {stamped && (
+        <div className={styles.stamp} aria-hidden="true">
+          <span className={styles.stampWord}>Published</span>
+          <span className={styles.stampDate}>{formatDate(new Date())}</span>
+        </div>
+      )}
+
+      {/* The title field is the visual heading; this names the page for screen readers. */}
+      <h1 className="visually-hidden">{isNew ? 'New post' : `Edit post: ${draft.title || 'Untitled'}`}</h1>
+
       <div className={styles.bar}>
         <div className={styles.barLeft}>
           <Link to="/workshop/posts" className={styles.back}>

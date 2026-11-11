@@ -73,3 +73,35 @@
     text-align: center;
   }
 }
+
+/* ── Async paging ────────────────────────────────────────────────────── */
+.page {
+  border-radius: 999px;
+}
+
+.current {
+  background: var(--anvil);
+  border-color: var(--anvil);
+  color: var(--on-ink);
+}
+
+/* The requested page, while it loads: a ring that turns. */
+.pending {
+  position: relative;
+}
+
+.pending::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-top-color: var(--ember);
+  animation: pager-spin 700ms linear infinite;
+}
+
+@keyframes pager-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
