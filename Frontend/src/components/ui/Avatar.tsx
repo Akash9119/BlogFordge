@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { initials } from '@/lib/format'
 import styles from './Avatar.module.css'
@@ -10,13 +11,20 @@ interface AvatarProps {
 
 /** Falls back to mono initials — no generated cartoon faces. */
 export function Avatar({ name, src, size = 32 }: AvatarProps) {
+  // A dead avatar URL falls back to initials instead of a broken-image icon.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null)
+  const showImage = Boolean(src) && failedSrc !== src
   return (
     <span
       className={styles.avatar}
       style={{ width: size, height: size, fontSize: Math.max(10, Math.round(size * 0.34)) }}
       aria-hidden="true"
     >
-      {src ? <img className={styles.image} src={src} alt="" loading="lazy" /> : initials(name)}
+      {showImage ? (
+        <img className={styles.image} src={src} alt="" loading="lazy" onError={() => setFailedSrc(src ?? null)} />
+      ) : (
+        initials(name)
+      )}
     </span>
   )
 }

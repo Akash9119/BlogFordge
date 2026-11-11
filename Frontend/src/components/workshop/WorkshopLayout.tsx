@@ -8,6 +8,7 @@ import { Button, LinkButton } from '@/components/ui/Button'
 import { Icon, type IconName } from '@/components/ui/Icon'
 import { RoleBadge } from '@/components/ui/Badge'
 import { InlineLoading } from '@/components/ui/States'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import styles from './WorkshopLayout.module.css'
 
 interface NavItem {
@@ -20,6 +21,8 @@ interface NavItem {
 }
 
 const COLLAPSE_KEY = 'blogforge.sidebarCollapsed'
+
+const dateFormat = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
 export function WorkshopLayout() {
   const { user, logout } = useAuth()
@@ -127,6 +130,8 @@ export function WorkshopLayout() {
         </nav>
 
         <div className={styles.sidebarFoot}>
+          {/* On phones the top bar has no room for the toggle; it lives here instead. */}
+          <ThemeToggle className={styles.drawerToggle} />
           <NavLink to="/" className={styles.navItem} title={collapsed ? 'View the blog' : undefined}>
             <Icon name="arrowUpRight" size={18} />
             <span className={styles.navLabel}>View the blog</span>
@@ -146,9 +151,11 @@ export function WorkshopLayout() {
             <Icon name="menu" size={20} />
           </button>
 
+          <span className={styles.topbarDate}>{dateFormat.format(new Date())}</span>
           <span className={styles.topbarSpacer} />
 
           <div className={styles.topbarActions}>
+            <ThemeToggle className={styles.topbarToggle} />
             {can.createPost(user) && (
               <LinkButton to="/workshop/posts/new" variant="primary" size="sm" icon={<Icon name="plus" size={16} />}>
                 New post

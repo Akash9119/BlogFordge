@@ -15,7 +15,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  background: linear-gradient(90deg, transparent, var(--skeleton-sheen), transparent);
   animation: shimmer 1.4s infinite;
 }
 
@@ -67,10 +67,11 @@
 }
 
 .title {
-  font-family: var(--font-ui);
-  font-size: var(--text-h3);
-  line-height: var(--text-h3-lh);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 350;
+  letter-spacing: -0.02em;
   color: var(--anvil);
   max-width: 46ch;
 }

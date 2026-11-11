@@ -1,64 +1,150 @@
+/* Auth: a photograph and a line on the left, a quiet form on the right. */
 .page {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--space-6) var(--space-4) var(--space-8);
+  flex-wrap: wrap;
+  min-height: 100dvh;
   background: var(--paper);
 }
 
+/* ── Left: photo + headline ──────────────────────────────────────────── */
+.visual {
+  position: relative;
+  flex: 1 1 560px;
+  min-height: 520px;
+  overflow: hidden;
+  color: #f4f5f2;
+  background: #121416;
+}
+
+.photo {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 100% 0);
+  animation: wipe 1.4s var(--ease-expo) 0.1s forwards;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.2) brightness(0.6);
+  transform: scale(1.2);
+  animation: settle 2.2s var(--ease-out-expo) 0.1s forwards;
+}
+
+.visualInner {
+  position: relative;
+  height: 100%;
+  min-height: inherit;
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-7);
+}
+
+.visualBrand {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  letter-spacing: -0.03em;
+}
+
+.visualTitle {
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: clamp(3rem, 5.6vw, 5.25rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.visualAccent {
+  color: #f59a62;
+}
+
+.visualNote {
+  display: inline-block;
+  margin-top: var(--space-4);
+  color: #f7d6bf;
+  transform: rotate(-2deg);
+  transform-origin: left;
+  opacity: 0;
+  animation: fade-in 900ms var(--ease) 1.2s forwards;
+}
+
+.visualCredit {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  opacity: 0.7;
+}
+
+/* ── Right: the form ─────────────────────────────────────────────────── */
+.side {
+  flex: 1 1 440px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6) var(--gutter);
+}
+
+.sideTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+}
+
 .brand {
-  margin-bottom: var(--space-7);
+  display: inline-flex;
 }
 
 .card {
   width: 100%;
-  max-width: 420px;
-  background: var(--surface);
-  border: 1px solid var(--filing);
-  border-radius: var(--radius-card);
-  padding: var(--space-6);
+  max-width: 440px;
+  margin: auto 0;
+  padding: var(--space-8) 0;
+  animation: rise 900ms var(--ease-out-expo) 0.25s both;
 }
 
 .eyebrow {
   font-family: var(--font-mono);
-  font-size: var(--text-label);
-  line-height: var(--text-label-lh);
-  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--steel);
+  color: var(--ember-strong);
+  margin-bottom: var(--space-3);
 }
 
 .title {
-  margin-top: var(--space-2);
   font-family: var(--font-display);
-  font-size: var(--text-h1);
-  line-height: var(--text-h1-lh);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  color: var(--anvil);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 .lede {
-  margin-top: var(--space-2);
-  font-size: var(--text-small);
-  line-height: var(--text-small-lh);
-  color: var(--steel);
+  margin-top: var(--space-3);
+  font-family: var(--font-reading);
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--slate);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  margin-top: var(--space-6);
+  gap: var(--space-5);
+  margin-top: var(--space-7);
 }
 
-/* Top-level API `message` — the banner form of an error (§11). */
+/* Top-level API `message` — the banner form of an error. */
 .banner {
   display: flex;
   gap: var(--space-3);
-  padding: var(--space-3);
-  border-radius: var(--radius-control);
+  padding: var(--space-3) var(--space-4);
+  border-left: 2px solid var(--danger);
   background: var(--danger-tint);
   color: var(--danger-strong);
   font-size: var(--text-small);
@@ -66,6 +152,7 @@
 }
 
 .bannerInfo {
+  border-left-color: var(--quench);
   background: var(--quench-tint);
   color: var(--quench-strong);
 }
@@ -90,24 +177,24 @@
 }
 
 .link {
-  color: var(--quench-strong);
+  color: var(--anvil);
   font-weight: 500;
   text-decoration: none;
+  background: linear-gradient(var(--ember), var(--ember)) 0 100% / 100% 1px no-repeat;
+  transition:
+    background-size var(--dur-slow) var(--ease-expo),
+    color var(--dur) var(--ease);
 }
 
 .link:hover {
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  color: var(--ember-strong);
 }
 
 .aside {
-  max-width: 420px;
+  max-width: 440px;
   width: 100%;
-  margin-top: var(--space-4);
-  padding: var(--space-4);
-  border: 1px solid var(--filing);
-  border-radius: var(--radius-card);
-  background: transparent;
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--filing);
   font-size: var(--text-small);
   line-height: var(--text-small-lh);
   color: var(--steel);
@@ -115,8 +202,8 @@
 
 .asideTitle {
   font-family: var(--font-mono);
-  font-size: var(--text-label);
-  letter-spacing: 0.06em;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--slate);
   margin-bottom: var(--space-2);
@@ -124,14 +211,66 @@
 
 .back {
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-5);
-  font-size: var(--text-small);
-  color: var(--steel);
-  text-decoration: none;
+  min-height: 44px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--slate);
 }
 
-.back:hover {
-  color: var(--iron);
+@keyframes wipe {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes settle {
+  to {
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .visual {
+    min-height: 300px;
+    flex-basis: 100%;
+  }
+  .visualTitle {
+    font-size: clamp(2.5rem, 9vw, 3.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo {
+    clip-path: none;
+  }
+  .photo img {
+    transform: none;
+  }
+  .visualNote {
+    opacity: 1;
+  }
+}
+
+/* Local copy: CSS Modules scope keyframe names, so the global one is unreachable. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

@@ -1,207 +1,378 @@
-/* Post card — §7. Flat surface, hairline border, no shadow. */
-.card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  background: var(--surface);
-  border: 1px solid var(--filing);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-  transition: border-color var(--dur) var(--ease);
-}
+/* ── Shared ──────────────────────────────────────────────────────────── */
 
-.card:hover {
-  border-color: var(--steel-soft);
-}
-
-.card:focus-within {
-  border-color: var(--quench);
-}
-
-.thumb {
-  aspect-ratio: 16 / 9;
+/* Photos sit slightly desaturated and come to full colour when touched. */
+.photo {
+  display: block;
   width: 100%;
+  height: 100%;
   object-fit: cover;
-  background: var(--mist);
-  border-bottom: 1px solid var(--filing);
+  filter: grayscale(0.35) contrast(1.04);
+  transition:
+    filter 800ms var(--ease),
+    transform 1200ms var(--ease-out-expo);
 }
 
-/* No cover image: a quiet steel field with the forge mark, not a stock photo. */
-.thumbFallback {
-  aspect-ratio: 16 / 9;
+/* No cover: a typographic plate — one big wonky initial on ink. */
+.fallback {
   width: 100%;
+  height: 100%;
   display: grid;
   place-items: center;
-  background: var(--mist);
-  border-bottom: 1px solid var(--filing);
-  color: var(--steel-soft);
+  background: var(--anvil);
+  overflow: hidden;
+  transition: background-color 600ms var(--ease);
 }
 
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  flex: 1;
-}
-
-.kickerRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: 16px;
-}
-
-.title {
+.fallbackLetter {
   font-family: var(--font-display);
-  font-size: var(--text-h3);
-  line-height: var(--text-h3-lh);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--anvil);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  font-weight: 340;
+  font-size: clamp(6rem, 14vw, 14rem);
+  line-height: 1;
+  color: var(--ember);
+  transition: transform 1200ms var(--ease-out-expo);
+}
+
+.caption {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
 }
 
 .titleLink {
   color: inherit;
   text-decoration: none;
+  background: linear-gradient(var(--ember), var(--ember)) 0 92% / 0 2px no-repeat;
+  transition: background-size 700ms var(--ease-expo);
 }
 
-/* Stretched hit area — the whole card is clickable, one tab stop. */
-.titleLink::after {
-  content: '';
+.titleLink:hover {
+  background-size: 100% 2px;
+}
+
+/* ── Cover story ─────────────────────────────────────────────────────── */
+.feature {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.featureMedia {
+  grid-column: 1 / span 8;
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+}
+
+.featureFrame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* img fills the wiping box; the box itself clips */
+.featureMedia img,
+.featureMedia .fallback {
   position: absolute;
   inset: 0;
 }
 
-.titleLink:hover {
-  color: var(--quench-strong);
+.featureMedia:hover .photo {
+  filter: none;
+  transform: scale(1.03);
 }
 
-.excerpt {
-  font-size: var(--text-small);
-  line-height: var(--text-small-lh);
+.featureText {
+  grid-column: 9 / span 4;
+  padding-top: 104px; /* clear the "Read the story" seal */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.featureBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.featureTitle {
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: clamp(2rem, 3.3vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.featureExcerpt {
+  font-family: var(--font-reading);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+/* The slowly turning "Read the story" seal over the image corner. */
+.badgeSpin {
+  position: absolute;
+  opacity: 0;
+  animation:
+    fade-in 600ms var(--ease) 1.2s forwards,
+    spin 22s linear infinite;
+  z-index: 2;
+  right: -52px;
+  top: -52px;
+  width: 136px;
+  height: 136px;
+}
+
+.badgeDisc {
+  fill: var(--paper);
+}
+
+.badgeText {
+  font-family: var(--font-mono);
+  font-size: 15.5px;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  fill: var(--anvil);
+}
+
+.badgeArrow {
+  fill: none;
+  stroke: var(--ember);
+  stroke-width: 3;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Spotlight pair ──────────────────────────────────────────────────── */
+.spot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.spotLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--anvil);
+  text-decoration: none;
+}
+
+.spotMedia {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.spotTall .spotMedia {
+  aspect-ratio: 3 / 4;
+}
+
+.spotLink:hover .photo {
+  filter: none;
+  transform: scale(1.04);
+}
+
+.spotLink:hover .fallbackLetter {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+.spotTitle {
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-size: clamp(1.75rem, 2.6vw, 2.375rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  transition: color 300ms var(--ease);
+}
+
+.spotLink:hover .spotTitle {
+  color: var(--ember-strong);
+}
+
+.spotNote {
+  transform: rotate(-4deg);
+  transform-origin: left;
+}
+
+/* ── Index rows ──────────────────────────────────────────────────────── */
+.rows {
+  border-bottom: 1px solid var(--filing);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr) 160px 120px;
+  gap: var(--space-5);
+  align-items: baseline;
+  padding: var(--space-6) 0;
+  border-top: 1px solid var(--filing);
+  color: var(--anvil);
+  text-decoration: none;
+  transition: padding 550ms var(--ease-expo);
+}
+
+/* An ember rule wipes across the top edge on hover. */
+.row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  background: var(--ember);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-expo);
+}
+
+.row:hover {
+  padding-left: var(--space-4);
+}
+
+.row:hover::before {
+  transform: scaleX(1);
+}
+
+.rowNumber {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  color: var(--steel);
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.rowTitle {
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  transition: color 300ms var(--ease);
+}
+
+.row:hover .rowTitle {
+  color: var(--ember-strong);
+}
+
+.rowExcerpt {
+  max-width: 60ch;
+  font-family: var(--font-reading);
+  font-size: 1.0625rem;
+  line-height: 1.5;
   color: var(--slate);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  margin-top: auto;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--filing);
-}
-
-/* All measured facts, so: mono. */
-.stats {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
+.rowCat {
   font-family: var(--font-mono);
   font-size: var(--text-label);
-  letter-spacing: 0.04em;
+  color: var(--slate);
+}
+
+.rowMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
   color: var(--steel);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
-.stat {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+/* The hover photo: opens from its centre, slightly tilted. */
+.peek {
+  position: absolute;
+  z-index: 3;
+  right: 300px;
+  top: 50%;
+  width: 220px;
+  height: 150px;
+  overflow: hidden;
+  transform: translateY(-50%) rotate(-3deg);
+  clip-path: inset(50% 50% 50% 50%);
+  transition: clip-path 650ms var(--ease-expo);
+  pointer-events: none;
 }
 
-/* ── Featured hero variant ───────────────────────────────────────────── */
-.featured {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 0;
+.peek .photo {
+  filter: none;
 }
 
-.featured .thumb,
-.featured .thumbFallback {
-  aspect-ratio: auto;
-  height: 100%;
-  min-height: 320px;
-  border-bottom: none;
-  border-right: 1px solid var(--filing);
+.peek .fallbackLetter {
+  font-size: 5rem;
 }
 
-.featured .body {
-  padding: var(--space-6);
-  gap: var(--space-3);
-  justify-content: center;
+.row:hover .peek {
+  clip-path: inset(0 0 0 0);
 }
 
-.featured .title {
-  font-size: var(--text-h1);
-  line-height: var(--text-h1-lh);
+/* ── Responsive ──────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .featureMedia,
+  .featureText {
+    grid-column: 1 / -1;
+  }
+  .featureText {
+    padding-top: 0;
+  }
+  .badgeSpin {
+    width: 104px;
+    height: 104px;
+    right: 12px;
+    top: -40px;
+  }
+  .row {
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+  .rowCat,
+  .rowMeta,
+  .peek {
+    display: none;
+  }
+  .row:hover {
+    padding-left: 0;
+  }
 }
 
-.featured .excerpt {
-  font-size: var(--text-body);
-  line-height: var(--text-body-lh);
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+@media (hover: none) {
+  .peek {
+    display: none;
+  }
 }
 
-/* ── Grid ────────────────────────────────────────────────────────────── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-5);
-}
-
-/* Gentle staggered fade-up on index load — reduced-motion safe (§6). */
-.stagger {
-  animation: fade-up 320ms var(--ease) backwards;
-}
-
-@keyframes fade-up {
+/* Local copy: CSS Modules scope keyframe names, so the global one is unreachable. */
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stagger {
-    animation: none;
-  }
-}
-
-@media (max-width: 1000px) {
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .featured {
-    grid-template-columns: 1fr;
-  }
-  .featured .thumb,
-  .featured .thumbFallback {
-    min-height: 0;
-    aspect-ratio: 16 / 9;
-    border-right: none;
-    border-bottom: 1px solid var(--filing);
-  }
-  .featured .body {
-    padding: var(--space-5);
-  }
-  .featured .title {
-    font-size: var(--text-h2);
-    line-height: var(--text-h2-lh);
-  }
-}
-
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr;
+  to {
+    opacity: 1;
   }
 }

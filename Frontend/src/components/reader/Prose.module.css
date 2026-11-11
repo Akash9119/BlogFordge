@@ -182,3 +182,73 @@
   font-size: var(--text-body);
   margin-top: var(--space-5);
 }
+
+/* ── Editorial pass ──────────────────────────────────────────────────── */
+.prose h2,
+.prose h3 {
+  font-weight: 380;
+  letter-spacing: -0.025em;
+}
+
+.prose:not(.compact) h2 {
+  font-size: clamp(1.875rem, 3vw, 2.375rem);
+  line-height: 1.1;
+  margin-top: var(--space-8);
+}
+
+.prose:not(.compact) h3 {
+  font-size: 1.625rem;
+  line-height: 1.2;
+}
+
+.prose a {
+  color: var(--anvil);
+  text-decoration-color: var(--ember);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  transition: color var(--dur) var(--ease);
+}
+
+.prose a:hover {
+  color: var(--ember-strong);
+}
+
+/* Drop cap on the opening paragraph of a full article. */
+.prose:not(.compact) > p:first-child::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+  font-size: 5.6em;
+  line-height: 0.8;
+  padding: 0.08em 0.12em 0 0;
+  color: var(--ember);
+}
+
+/* Block quotes read as pull quotes. */
+.prose:not(.compact) blockquote {
+  margin: var(--space-7) 0;
+  padding: 0;
+  border: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 340;
+  font-size: clamp(1.625rem, 2.6vw, 2.125rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--anvil);
+  background: none;
+}
+
+.prose:not(.compact) blockquote::before {
+  content: '“';
+  display: block;
+  height: 0.5em;
+  font-size: 2.5em;
+  line-height: 1;
+  color: var(--ember);
+}
+
+.prose img {
+  border-radius: 0;
+}

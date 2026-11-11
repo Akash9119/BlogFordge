@@ -1,4 +1,5 @@
-/* Reset + global element defaults. Everything else lives in *.module.css. */
+/* Reset + global element defaults + the shared motion vocabulary.
+   Everything component-specific lives in *.module.css. */
 
 *,
 *::before,
@@ -22,6 +23,34 @@ body {
   background: var(--paper);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+/* Theme switch: colours ease over instead of snapping. Scoped to the
+   moment of switching (ThemeToggle sets the class) so hovers stay snappy. */
+html.theme-switching,
+html.theme-switching * {
+  transition:
+    background-color 500ms var(--ease),
+    border-color 500ms var(--ease),
+    color 500ms var(--ease) !important;
+}
+
+/* Paper grain over the whole page — a fixed noise layer that never catches
+   clicks. The SVG noise is generated inline, so no image request. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0.06;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+:root[data-theme='dark'] body::after {
+  mix-blend-mode: screen;
+  opacity: 0.045;
 }
 
 #root {
@@ -53,16 +82,17 @@ button {
 }
 
 a {
-  color: var(--quench-strong);
+  color: var(--anvil);
+  text-decoration-color: var(--ember);
   text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-weight: 600;
+  font-weight: 500;
   color: var(--anvil);
   text-wrap: balance;
 }
@@ -82,7 +112,7 @@ hr {
   border-top: 1px solid var(--filing);
 }
 
-/* One focus treatment, everywhere. Never remove it — §13. */
+/* One focus treatment, everywhere. Never remove it. */
 :focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-offset);
@@ -90,8 +120,8 @@ hr {
 }
 
 ::selection {
-  background: var(--ember-tint);
-  color: var(--anvil);
+  background: var(--ember);
+  color: #fff;
 }
 
 ::placeholder {
@@ -103,12 +133,12 @@ hr {
   position: absolute;
   left: var(--space-4);
   top: -100px;
-  z-index: 100;
+  z-index: 300;
   padding: var(--space-2) var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--filing);
-  border-radius: var(--radius-control);
+  background: var(--anvil);
+  color: var(--on-ink);
   font-weight: 500;
+  text-decoration: none;
   transition: top var(--dur) var(--ease);
 }
 
@@ -127,14 +157,154 @@ hr {
   border: 0;
 }
 
-/* §13: the publish morph and every fade degrade to instant. */
+/* ── Editorial type helpers ─────────────────────────────────────────── */
+
+/* Fraunces at display size, soft corners. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  letter-spacing: -0.035em;
+  color: var(--anvil);
+}
+
+/* The wonky italic — the one flourish in the type system. */
+.wonk {
+  font-style: italic;
+  font-variation-settings: 'opsz' 144, 'SOFT' 100, 'WONK' 1;
+}
+
+/* Handwriting. Margin notes only — never body copy, never more than a line. */
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--ember-strong);
+}
+
+/* Underline that draws in from the left on hover. */
+.draw-line {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--dur-slow) var(--ease-expo);
+}
+
+.draw-line:hover,
+.draw-line[aria-current='page'] {
+  background-size: 100% 1px;
+}
+
+/* Arrows nudge forward when their link/button is hovered. */
+.nudge {
+  display: inline-block;
+  transition: transform 400ms var(--ease-expo);
+}
+
+a:hover .nudge,
+button:hover .nudge {
+  transform: translateX(5px);
+}
+
+/* ── Motion vocabulary ──────────────────────────────────────────────── */
+
+/* Headline line reveal: each .line masks a child that slides up into place. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+.line > span {
+  display: block;
+  transform: translateY(105%);
+  animation: line-up 1.1s var(--ease-expo) forwards;
+  animation-delay: calc(var(--i, 0) * 110ms + 80ms);
+}
+
+/* Scroll reveal: useReveal() sets data-in when the element enters view. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 900ms var(--ease),
+    transform 1100ms var(--ease-out-expo);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+[data-reveal='wipe'] {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1300ms var(--ease-expo);
+}
+
+[data-reveal='wipe'] img {
+  transform: scale(1.2);
+  transition: transform 1800ms var(--ease-out-expo);
+}
+
+[data-reveal][data-in] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal='wipe'][data-in] {
+  clip-path: inset(0 0 0 0);
+}
+
+[data-reveal='wipe'][data-in] img {
+  transform: none;
+}
+
+@keyframes line-up {
+  to {
+    transform: none;
+  }
+}
+
+@keyframes draw-stroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Everything above degrades to instant, visible content. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
     scroll-behavior: auto !important;
   }
+
+  .line > span,
+  [data-reveal],
+  [data-reveal] img {
+    transform: none !important;
+    opacity: 1 !important;
+    clip-path: none !important;
+  }
+}
+
+/* Async paging: while the next page loads, the list it replaces dims in place
+   (the pager marks itself data-busy; its siblings fade). */
+:has(> nav[data-busy]) > :not(nav) {
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 250ms var(--ease);
 }

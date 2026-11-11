@@ -1,4 +1,4 @@
-import { useId, useMemo, useState, type PointerEvent, type ReactNode } from 'react'
+import { useEffect, useId, useMemo, useRef, useState, type PointerEvent, type ReactNode } from 'react'
 import type { DailyViews } from '@/lib/types'
 import { formatCount, formatDate } from '@/lib/format'
 import { useElementWidth } from '@/lib/useElementWidth'
@@ -180,7 +180,8 @@ export function LineChart({ data, title, subtitle, stale, emptyMessage, action }
               })}
 
               <path className={styles.area} d={areaPath} />
-              <path className={styles.line} d={linePath} />
+              {/* pathLength=1 lets CSS draw the line in at any length; key replays it on a new range. */}
+              <path key={linePath} className={styles.line} d={linePath} pathLength={1} />
 
               {/* Endpoint marker + its direct label — the only labelled point. */}
               {last && (
@@ -245,9 +246,40 @@ export function StatTile({ label, value, foot, icon }: StatTileProps) {
         {icon && <Icon name={icon} size={14} />}
         {label}
       </span>
-      <span className={styles.tileValue}>{typeof value === 'number' ? formatCount(value) : value}</span>
+      <span className={styles.tileValue}>{typeof value === 'number' ? <CountUp value={value} /> : value}</span>
       {foot && <span className={styles.tileFoot}>{foot}</span>}
     </div>
+  )
+}
+
+/** Counts a figure up from where it was (0 on first paint). Instant under reduced motion. */
+function CountUp({ value }: { value: number }) {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const [shown, setShown] = useState(reduced ? value : 0)
+  const shownRef = useRef(shown)
+
+  useEffect(() => {
+    const from = shownRef.current
+    if (from === value) return
+    let frame = 0
+    const start = performance.now()
+    const duration = reduced ? 0 : 1400
+    const tick = (now: number) => {
+      const t = duration ? Math.min(1, (now - start) / duration) : 1
+      const next = Math.round(from + (value - from) * (1 - Math.pow(1 - t, 4)))
+      shownRef.current = next
+      setShown(next)
+      if (t < 1) frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [value, reduced])
+
+  return (
+    <>
+      <span aria-hidden="true">{formatCount(shown)}</span>
+      <span className="visually-hidden">{formatCount(value)}</span>
+    </>
   )
 }
 

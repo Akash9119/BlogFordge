@@ -1,12 +1,13 @@
-/* Tag chips: quiet steel until hovered — §7. */
+/* Chips: hairline-outlined mono tags. Hover inks them; selected is solid ink. */
 .chip {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 3px var(--space-2);
+  min-height: 30px;
+  padding: 0 var(--space-3);
   border: 1px solid var(--filing);
-  border-radius: var(--radius-chip);
-  background: var(--surface);
+  border-radius: 999px;
+  background: transparent;
   font-family: var(--font-mono);
   font-size: var(--text-label);
   line-height: var(--text-label-lh);
@@ -15,49 +16,52 @@
   text-decoration: none;
   white-space: nowrap;
   transition:
-    border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease),
-    background-color var(--dur-fast) var(--ease);
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease),
+    transform 400ms var(--ease-out-expo);
 }
 
 a.chip:hover,
 button.chip:hover {
-  border-color: var(--quench);
-  color: var(--quench-strong);
-  background: var(--quench-tint);
+  border-color: var(--anvil);
+  color: var(--anvil);
+  transform: translateY(-2px);
 }
 
-.selected {
-  border-color: transparent;
-  background: var(--quench-tint);
-  color: var(--quench-strong);
-  font-weight: 500;
+.selected,
+a.selected:hover,
+button.selected:hover {
+  border-color: var(--anvil);
+  background: var(--anvil);
+  color: var(--on-ink);
 }
 
-/* Category kicker above a title — mono eyebrow, no border. */
+/* Category kicker above a title — mono eyebrow, ember. */
 .kicker {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: var(--text-label);
+  font-size: 0.6875rem;
   line-height: var(--text-label-lh);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 500;
   color: var(--ember-strong);
   text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size var(--dur-slow) var(--ease-expo);
 }
 
 a.kicker:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  background-size: 100% 1px;
 }
 
 .remove {
   display: inline-flex;
   align-items: center;
-  margin-right: -2px;
+  margin-right: -4px;
   padding: 2px;
-  border-radius: 3px;
+  border-radius: 50%;
   color: var(--steel);
 }
 

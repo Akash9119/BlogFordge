@@ -1,5 +1,32 @@
 # BlogForge — Frontend Design & Build Guide
 
+> ## v2 — Editorial direction (November 2026) — read this first
+>
+> The UI was redesigned in an editorial, magazine-like direction. Where this
+> section and the v1 guide below disagree, **this section wins**. The
+> Temperature Lifecycle (§5), the API wiring, the states rules (§11) and the
+> accessibility rules (§13) are unchanged.
+>
+> - **Palette:** paper (`--paper` #EFF1EF) and ink (`--anvil` #121416), one
+>   ember accent. Token *names* are unchanged; `src/styles/tokens.css` holds the
+>   values and a full dark theme under `:root[data-theme='dark']`.
+> - **Theme:** light/dark, following the OS until the reader picks one with the
+>   "( Lights off )" toggle (`src/lib/theme.ts`, persisted in localStorage;
+>   `index.html` applies it before first paint).
+> - **Type:** Fraunces at display sizes (weight ~340, the `.wonk` italic for one
+>   accent word), Newsreader for reading, Geist for chrome, JetBrains Mono for
+>   data. `.hand` (Caveat) is for one-line margin notes only — never body copy.
+> - **Shape:** near-square radii (2–4px), hairline rules instead of cards,
+>   primary buttons are ink blocks that fill with ember on hover.
+> - **Motion** (all off under `prefers-reduced-motion`): headline line reveals
+>   (`.line`), scroll reveals (`data-reveal`, `data-reveal="wipe"` via
+>   `useReveal` in `src/lib/motion.ts`), Lenis smooth scrolling on the Reader
+>   only, the drawn scribble/chart line, the index-row hover peek, and the
+>   publish **stamp** in the editor.
+> - **CSS Modules gotcha:** keyframe names are scoped per module. A module that
+>   animates must define its own `@keyframes`; it cannot reference the global
+>   ones in `base.css`.
+
 > A single source of truth for the AI agent building the BlogForge frontend.
 > Follow this exactly. Where it gives tokens, use those tokens. Where it names a
 > screen, wire it to the listed API endpoint. Do not substitute your own

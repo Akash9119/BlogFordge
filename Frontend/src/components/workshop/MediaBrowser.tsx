@@ -165,7 +165,7 @@ export function MediaBrowser({ onSelect, selectedUrl, showDelete = true, pageSiz
 
               const body = (
                 <>
-                  <img className={styles.thumb} src={item.url} alt={item.originalName || ''} loading="lazy" />
+                  <Thumb src={item.url} alt={item.originalName || ''} />
                   <span className={styles.itemMeta}>
                     <span className={styles.itemName}>{item.originalName || item.publicId}</span>
                     <span className={styles.itemStats}>
@@ -215,7 +215,7 @@ export function MediaBrowser({ onSelect, selectedUrl, showDelete = true, pageSiz
             })}
           </div>
 
-          {media.data && <Pagination meta={media.data.meta} onPageChange={setPage} noun="file" />}
+          {media.data && <Pagination meta={media.data.meta} onPageChange={setPage} noun="file" busy={media.isPlaceholderData} />}
         </>
       )}
 
@@ -278,4 +278,17 @@ export function MediaPicker({ open, onClose, onPick, selectedUrl }: MediaPickerP
       />
     </Modal>
   )
+}
+
+/** A library thumbnail; a dead Cloudinary URL shows a quiet placeholder, not a broken icon. */
+function Thumb({ src, alt }: { src: string; alt: string }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) {
+    return (
+      <span className={styles.thumb} role="img" aria-label={alt ? `${alt} (unavailable)` : 'Image unavailable'} style={{ display: 'grid', placeItems: 'center', background: 'var(--mist)', color: 'var(--steel)', fontFamily: 'var(--font-mono)', fontSize: 'var(--text-label)' }}>
+        unavailable
+      </span>
+    )
+  }
+  return <img className={styles.thumb} src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} />
 }

@@ -55,7 +55,7 @@
   padding: var(--space-3);
   border-radius: var(--radius-control);
   background: var(--pending-tint);
-  color: #6f460d;
+  color: var(--pending-strong);
   font-size: var(--text-small);
   line-height: var(--text-small-lh);
 }

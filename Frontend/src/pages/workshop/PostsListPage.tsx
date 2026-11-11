@@ -320,7 +320,7 @@ export function PostsListPage() {
             )}
           </Table>
 
-          {posts.data && <Pagination meta={posts.data.meta} onPageChange={goToPage} noun="post" />}
+          {posts.data && <Pagination meta={posts.data.meta} onPageChange={goToPage} noun="post" busy={posts.isPlaceholderData} />}
         </>
       )}
 
