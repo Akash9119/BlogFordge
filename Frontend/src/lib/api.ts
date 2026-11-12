@@ -1,7 +1,7 @@
 import type { FieldError, Meta, TokenPair } from './types'
 import { announceSessionEnd, tokenStore } from './tokens'
 
-const BASE = import.meta.env.VITE_API_URL ?? '/api/v1'
+const BASE = import.meta.env.VITE_API_URL || '/api/v1' // || not ??: the Docker build passes VITE_API_URL=""
 
 /** §11: 5xx messages are masked in production — never surface a raw one. */
 const SERVER_ERROR_COPY = 'Something failed on our end. Try again.'

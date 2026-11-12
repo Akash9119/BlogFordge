@@ -79,7 +79,6 @@ services:
       - "443:443/udp"   # HTTP/3
     environment:
       SITE_ADDRESS: ${SITE_ADDRESS}
-      ACME_EMAIL: ${ACME_EMAIL}
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       # Certificates and ACME account keys. Losing this volume means re-issuing

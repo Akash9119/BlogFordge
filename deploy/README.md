@@ -170,7 +170,6 @@ Fill in:
 **`.env`** (the edge)
 ```ini
 SITE_ADDRESS=:80              # switch to blog.example.com in Step 7
-ACME_EMAIL=you@example.com
 PUBLIC_ORIGIN=http://<your-public-ip>
 ```
 

@@ -6,7 +6,6 @@
 # Set it in deploy/.env. Nothing else in this file changes between the two.
 
 {
-	email {$ACME_EMAIL:noreply@example.com}
 	# Behind OCI's plain VM there is no upstream load balancer, so Caddy is the
 	# first hop and sees the real client IP.
 	servers {
